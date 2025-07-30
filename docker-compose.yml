@@ -9,7 +9,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=example
-      - MONGO_INITDB_DATABASE=characters
+      - MONGO_INITDB_DATABASE=users
 
   postgres:
     image: postgres:15
@@ -18,11 +18,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - /home/manu/Escritorio/Facultad/Desarrollo de Software/characters-api/src/character/migrations/script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./src/car/migrations/script.sql:/docker-entrypoint-initdb.d/script.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=characters
+      - POSTGRES_DB=cars
 volumes:
   mongodb_data:
     driver: local
