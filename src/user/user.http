@@ -1,0 +1,2 @@
+DELETE http://localhost:3000/api/users/688ace71d924989a165293ec
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OGFjZTcxZDkyNDk4OWExNjUyOTNlYyIsImlhdCI6MTc1MzkyNzcyMiwiZXhwIjoxNzUzOTMxMzIyfQ.bimIU9t6iotL8lcE4UOOEseELxLKAvWjXwjMUNWG6uw

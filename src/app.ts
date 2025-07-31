@@ -1,12 +1,23 @@
 import express from 'express';
-import { carRouter } from './car/car.routes.js';
+import dotenv from 'dotenv';
+import userRoutes from './user/user.routes.js';
+import { errorHandler } from './user/auth.middleware.js';
+import { connectDB } from './user/user.db.js';
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
+// Conectar a MongoDB
+connectDB();
 
-app.use('/api/cars', carRouter);
+app.use(express.json());
+app.use('/api/users', userRoutes);
 
-app.listen(3000, () => {
-  console.log('Server runnning on http://localhost:3000/')
-})
+// Manejo de errores global
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
