@@ -48,7 +48,7 @@ export const userExtractor = (req: Request, res: Response, next: NextFunction) =
 
   const token = authHeader.substring(7);
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET || 'secret') as { id: string };
+    const decodedToken = jwt.verify(token, process.env.SECRET || 'mysecretkey') as { id: string };
     if (!decodedToken.id) {
       res.status(401).json({ error: 'Token inválido' });
       return; 
