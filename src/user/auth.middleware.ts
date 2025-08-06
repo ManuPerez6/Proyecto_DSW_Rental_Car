@@ -20,7 +20,7 @@ export const requestLogger = (req: Request, _res: Response, next: NextFunction) 
 };
 
 // Handler de errores
-export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
 
   if (err.name === 'CastError') {

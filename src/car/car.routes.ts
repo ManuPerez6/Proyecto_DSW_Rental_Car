@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { CarController } from './car.controller.js';
 
-export const carRouter = Router();
+const carRouter = Router();
 const carController = new CarController();
 
 carRouter.get('/', carController.findAllCars);
@@ -33,3 +33,4 @@ function sanitizeCarInput(req:any, res:any, next:any) {
   next()
 }
 
+export default carRouter;

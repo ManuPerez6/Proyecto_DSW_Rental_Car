@@ -1,8 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { registerUser, listUsers } from './user.controller.js';
+import { registerUser, listUsers, getUserById, deleteUser} from './user.controller.js';
 import { login } from './auth.controller.js';
 import { userExtractor, requestLogger } from './auth.middleware.js';
-import { deleteUserById } from './user.service.js';
 
 const router = Router();
 
@@ -22,20 +21,14 @@ router.get('/', userExtractor, (req: Request, res: Response, next: NextFunction)
   listUsers(req, res).catch(next);
 });
 
+
+router.get('/:id', userExtractor, (req: Request, res: Response, next: NextFunction) => {
+  getUserById(req, res).catch(next); 
+});
+
 // Eliminar usuario por id (requiere autenticación y ser el propio usuario)
 router.delete('/:id', userExtractor, async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userId = req.user.id;
-    if (userId !== req.params.id) {
-      res.status(403).json({ error: 'No autorizado' });
-      return; 
-    }
-    
-    await deleteUserById(req.params.id);
-    res.status(204).end();
-  } catch (error) {
-    next(error); 
-  }
+  deleteUser(req,res).catch(next);
 });
 
 export default router;

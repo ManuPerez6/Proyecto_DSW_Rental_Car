@@ -1,2 +1,7 @@
-GET http://localhost:3000/api/users 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OGQyNTgyMDU2YTczZTAzMGUyNTg4YiIsImlhdCI6MTc1NDA4MDgyNSwiZXhwIjoxNzU0MDg0NDI1fQ.OakZYkQV5tcB-YMcvLk8GUlm7b1iPtjCApylSg7dMlc
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "secure123"
+}

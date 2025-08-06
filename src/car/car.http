@@ -27,7 +27,7 @@ Content-Type: application/json
   "model": "Corolla",
   "year": 2022,
   "color": "Blue",
-  "price": 45,
+  "price": 100000,
   "available": true
 }
 
@@ -36,9 +36,9 @@ PATCH http://localhost:3000/api/cars/1
 Content-Type: application/json
 
 {
-  "price": 40000000,
+  "price": 150000,
   "available": false
 }
 
 ### borrar un car
-DELETE http://localhost:3000/api/cars/2
+DELETE http://localhost:3000/api/cars/1
