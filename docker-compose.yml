@@ -18,11 +18,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/car/migrations/script.sql:/docker-entrypoint-initdb.d/script.sql
+      - ./src/migrations/script.sql:/docker-entrypoint-initdb.d/script.sql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=cars
+      - POSTGRES_DB=repository
 volumes:
   mongodb_data:
     driver: local

@@ -21,8 +21,6 @@ function sanitizeCarInput(req:any, res:any, next:any) {
     price: req.body.price,
     available: req.body.available
   }
-  
-  //more checks here
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {
     if (req.body.sanitizedInput[key] === undefined) {
