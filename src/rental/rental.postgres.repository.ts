@@ -1,5 +1,6 @@
-import { Rental } from "./rental.entity";
-import { RentalRepository } from "./rental.repository.interface";
+import { Rental } from "./rental.entity.js";
+import { RentalRepository } from "./rental.repository.interface.js";
+import { findUserById } from "../user/user.service.js";
 import { Client } from "pg";
 
 const client = new Client({
@@ -21,9 +22,44 @@ export class RentalPostgresRepository implements RentalRepository {
         return res.rows as Rental[] || undefined;
     }
 
-    async findOne(id: string): Promise<Rental | undefined> {
-        const res = await client.query('SELECT r.*, json_build_object(\'id\', c.id, \'brand\', c.brand, \'model\', c.model, \'year\', c.year, \'color\', c.color, \'price\', c.price, \'available\', c.available) AS car FROM rentals r JOIN cars c ON r.carId = c.id WHERE r.id = $1', [id]);
-        return res.rows[0] as Rental || undefined;
+   async findOne(id: string): Promise<any | undefined> {
+        try {
+            const rentalQuery = `
+                SELECT 
+                    r.*, 
+                    json_build_object(
+                        'id', c.id, 
+                        'brand', c.brand, 
+                        'model', c.model, 
+                        'year', c.year, 
+                        'color', c.color, 
+                        'price', c.price, 
+                        'available', c.available
+                    ) AS car 
+                FROM rentals r 
+                JOIN cars c ON r.carId = c.id 
+                WHERE r.id = $1
+            `;
+            
+            const rentalResult = await client.query(rentalQuery, [id]);
+            
+            if (rentalResult.rows.length === 0) {
+                return undefined;
+            }
+
+            const rental = rentalResult.rows[0];
+            
+            const user = await findUserById(rental.userid);
+            
+            return {
+                ...rental,
+                user: user ? user.toJSON() : null 
+            };
+            
+        } catch (error) {
+            console.error('Error finding rental with user and car:', error);
+            return undefined;
+        }
     }
 
     async add(rental: Rental): Promise<Rental | undefined> {

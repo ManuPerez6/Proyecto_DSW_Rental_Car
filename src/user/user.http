@@ -7,5 +7,3 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/users/68941fbf8f978a436528b632
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTQxZmJmOGY5NzhhNDM2NTI4YjYzMiIsImlhdCI6MTc1NDUzNzk2NywiZXhwIjoxNzU0NTQxNTY3fQ.nwVQ--BgN1ZCWaYweCFGgx_YRzWEqkW5K8HyPVPpAUE

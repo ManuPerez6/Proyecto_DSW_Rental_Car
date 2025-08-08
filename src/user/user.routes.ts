@@ -21,7 +21,7 @@ router.get('/', userExtractor, (req: Request, res: Response, next: NextFunction)
   listUsers(req, res).catch(next);
 });
 
-
+// Obtener usuario único por ID
 router.get('/:id', userExtractor, (req: Request, res: Response, next: NextFunction) => {
   getUserById(req, res).catch(next); 
 });
