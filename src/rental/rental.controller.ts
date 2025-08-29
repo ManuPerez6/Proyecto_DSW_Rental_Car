@@ -11,11 +11,15 @@ export class RentalController {
 
     async findAllRentals(_req: Request, res: Response) {
         const rentals = await rentalRepository.findAll();
-        res.json(rentals);
+        const rentalsWithId = (rentals ?? []).map(rental => ({
+        id: rental.id ?? rental.id,
+        ...rental
+        }));
+        res.json(rentalsWithId);
     }
 
     async findRentalById(req: Request, res: Response) {
-        const rentalId = req.params.id;
+        const rentalId = Number(req.params.id);
         const rental = await rentalRepository.findOne(rentalId);
         if (!rental) {
             res.status(404).json({
@@ -71,7 +75,7 @@ export class RentalController {
     }
 
     async updateRental(req: Request, res: Response): Promise<void> {
-        const rentalId = req.params.id;
+        const rentalId = Number(req.params.id);
         const input = req.body;
 
         const car = await carRepository.findOne(input.carId);
@@ -114,7 +118,7 @@ export class RentalController {
         res.status(201).json({ data: updatedRental });
     }
     async partiallyUpdateRental(req: Request, res: Response): Promise<void> {
-        const rentalId = req.params.id;
+        const rentalId = Number(req.params.id);
         const input = req.body;
 
         let car, user;
@@ -163,7 +167,7 @@ export class RentalController {
         res.status(200).json({ data: updatedRental });
     }
     async deleteRental(req: Request, res: Response): Promise<void> {
-        const rentalId = req.params.id;
+        const rentalId = Number(req.params.id);
 
         const deleted = await rentalRepository.delete(rentalId);
 

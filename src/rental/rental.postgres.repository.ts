@@ -14,7 +14,7 @@ const pool = new Pool({
 });
 
 export class RentalPostgresRepository implements RentalRepository {
-    private async updateCarAvailabilityIfReserved(rentalOrUpdates: { status?: string, car?: Car }) {
+    public async updateCarAvailabilityIfReserved(rentalOrUpdates: { status?: string, car?: Car }) {
         if (rentalOrUpdates.status === "reserved" && rentalOrUpdates.car) {
             await pool.query('UPDATE cars SET available = false WHERE id = $1', [rentalOrUpdates.car.id]);
         }
@@ -37,14 +37,14 @@ export class RentalPostgresRepository implements RentalRepository {
             if (user) {
                 const carObj = row.car;
                 const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, carObj.price, carObj.available);
-                const rental = new Rental(user, car, row.startdate, row.enddate, row.price, row.status);
+                const rental = new Rental(user, car, row.startdate, row.enddate, row.price, row.status, row.id);
                 rentals.push(rental);
             }
         }
         return rentals.length ? rentals : undefined;
     }
 
-    async findOne(id: string): Promise<Rental | undefined> {
+    async findOne(id: number): Promise<Rental | undefined> {
         try {
             const rentalQuery = `
                 SELECT 
@@ -73,7 +73,7 @@ export class RentalPostgresRepository implements RentalRepository {
             }
             const carObj = row.car;
             const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, carObj.price, carObj.available);
-            return new Rental(user, car, row.startdate, row.enddate, row.price, row.status);
+            return new Rental(user, car, row.startdate, row.enddate, row.price, row.status, row.id);
         } catch (error) {
             console.error('Error finding rental with user and car:', error);
             return undefined;
@@ -97,13 +97,14 @@ export class RentalPostgresRepository implements RentalRepository {
         }
     }
 
-    async update(id: string, rental: Rental): Promise<Rental | undefined> {
+    async update(id: number, rental: Rental): Promise<Rental | undefined> {
         try {
             await this.updateCarAvailabilityIfReserved({ status: rental.status, car: rental.car });
             const res = await pool.query(
                 'UPDATE rentals SET userId = $1, carId = $2, startDate = $3, endDate = $4, price = $5, status = $6 WHERE id = $7 RETURNING *',
                 [rental.user.id, rental.car.id, rental.startDate, rental.endDate, rental.price, rental.status, id]
             );
+            rental.id = res.rows[0].id;
             return rental;
         } catch (error) {
             console.error('Error updating rental:', error);
@@ -111,7 +112,7 @@ export class RentalPostgresRepository implements RentalRepository {
         }
     }
 
-    async partialUpdate(id: string, updates: Partial<Rental>): Promise<Rental | undefined> {
+    async partialUpdate(id: number, updates: Partial<Rental>): Promise<Rental | undefined> {
         try {
             await this.updateCarAvailabilityIfReserved(updates);
             const keys = Object.keys(updates);
@@ -126,7 +127,7 @@ export class RentalPostgresRepository implements RentalRepository {
         }
     }
 
-    async delete(id: string): Promise<Rental | undefined> {
+    async delete(id: number): Promise<Rental | undefined> {
         try {
             const res = await pool.query('DELETE FROM rentals WHERE id = $1 RETURNING *', [id]);
             return res.rows[0] as Rental || undefined;

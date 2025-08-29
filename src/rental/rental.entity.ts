@@ -2,7 +2,7 @@ import { Car } from "../car/car.entity";
 import { IUser } from "../user/user.entity";
 
 export class Rental {
-    public id?: string;
+    public id?: number;
     public user: IUser;
     public car: Car;
     public startDate: Date;
@@ -17,7 +17,7 @@ export class Rental {
         endDate: Date,
         price: number,
         status: string,
-        id?: string
+        id?: number
     ) {
         this.id = id;
         this.user = user;
