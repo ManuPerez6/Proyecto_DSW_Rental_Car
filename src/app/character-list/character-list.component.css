@@ -1,0 +1,194 @@
+.character-card {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.character-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+button {
+  margin-right: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button[routerLink] {
+  text-decoration: none;
+  color: white;
+  display: inline-block;
+}
+
+button:last-child {
+  background-color: #dc3545;
+}
+
+button:last-child:hover {
+  background-color: #c82333;
+}
+
+button[routerLink="/character/new"] {
+  margin-top: 1rem;
+  background-color: #28a745;
+}
+
+button[routerLink="/character/new"]:hover {
+  background-color: #218838;
+}
+
+.table-container {
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: auto;
+  position: relative;
+  min-height: 200px;
+}
+
+.table-toolbar {
+  margin-bottom: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Estilos para la tabla */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Estilos para las celdas de la tabla */
+th.mat-header-cell, td.mat-cell {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+th.mat-header-cell {
+  font-weight: 600;
+  color: #3f51b5;
+  background-color: #f5f5f5;
+}
+
+/* Estilos para las filas */
+tr.mat-row {
+  transition: background-color 0.2s;
+}
+
+tr.mat-row:hover {
+  background-color: #f5f5f5;
+}
+
+/* Estilos para los botones de acción */
+.actions-cell {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.actions-cell button {
+  margin: 0 4px;
+}
+
+/* Estilos para los badges de estadísticas */
+.stat-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  min-width: 40px;
+}
+
+.hp {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.mana {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.attack {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+/* Estilos para los enlaces */
+.character-name {
+  color: #3f51b5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.character-name:hover {
+  color: #1a237e;
+  text-decoration: underline;
+}
+
+/* Estilos para el mensaje de carga */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Estilos para el mensaje de sin datos */
+.no-data {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Estilos para los items */
+.items {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.no-items {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 960px) {
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  table {
+    min-width: 800px;
+  }
+}

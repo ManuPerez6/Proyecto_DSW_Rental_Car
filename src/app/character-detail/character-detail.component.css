@@ -1,0 +1,151 @@
+.table-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 8px;
+}
+
+.table-header h2 {
+  margin: 0;
+  color: #3f51b5;
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.detail-card {
+  width: 100%;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.detail-card mat-card-header {
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-card mat-card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #3f51b5;
+}
+
+.detail-card mat-card-subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+  padding: 0 16px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #3f51b5;
+}
+
+.divider {
+  margin: 20px 0;
+}
+
+.items-section {
+  padding: 0 16px 16px;
+}
+
+.items-section h3 {
+  font-size: 1.2rem;
+  color: #3f51b5;
+  margin-bottom: 12px;
+}
+
+mat-chip {
+  margin: 4px;
+}
+
+.no-items {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 16px 0;
+}
+
+mat-card-actions {
+  padding: 16px;
+  border-top: 1px solid #f0f0f0;
+  background-color: #fafafa;
+}
+
+.loading-shade {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .table-container {
+    padding: 0 8px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .table-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  mat-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  mat-card-actions button {
+    width: 100%;
+    margin: 0;
+  }
+}
