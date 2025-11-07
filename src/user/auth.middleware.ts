@@ -9,22 +9,11 @@ type JwtUser = {
 };
 
 declare module 'express' {
-  // Anotamos `user` con la forma concreta para ayudar al chequeo de tipos en controladores
   interface Request {
     user?: JwtUser;
   }
 }
 
-// Logger de peticiones
-export const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
-  console.log(`Method: ${req.method}`);
-  console.log(`Path:   ${req.path}`);
-  if (req.method !== 'GET') {
-    console.log(`Body:   ${JSON.stringify(req.body)}`);
-  }
-  console.log('---');
-  next();
-};
 
 // Handler de errores 
 export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -35,7 +24,7 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   } else if (err.name === 'ValidationError') {
     res.status(400).json({ error: err.message });
   } else if (err.name === 'MongoServerError' && err.message.includes('E11000 duplicate key error')) {
-    res.status(400).json({ error: 'El nombre de usuario debe ser único' });
+    res.status(400).json({ error: 'Nombre de usuario inválido' });
   } else if (err.name === 'JsonWebTokenError') {
     res.status(401).json({ error: 'Token inválido' });
   } else if (err.name === 'TokenExpiredError') {
@@ -56,7 +45,12 @@ export const userExtractor = (req: Request, res: Response, next: NextFunction) =
   const token = authHeader.substring(7);
   try {
     // Usar la misma clave por defecto que en el login (fallback 'secret')
-    const decodedToken = jwt.verify(token, process.env.SECRET || 'secret') as { id: string, role: string, username: string };
+    if (!process.env.SECRET) {
+      res.status(500).json({ error: 'Configuración del servidor incompleta: SECRET no definido en el .env' });
+      return;
+    }
+
+    const decodedToken = jwt.verify(token, process.env.SECRET) as JwtUser;
     
     if (!decodedToken.id) {
       res.status(401).json({ error: 'Token inválido' });

@@ -3,14 +3,28 @@ import { RentalRepository } from "./rental.repository.interface.js";
 import { findUserById } from "../user/user.service.js";
 import { Pool } from "pg";
 import { Car } from "../car/car.entity.js";
-import { IUser } from "../user/user.entity.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const {
+    PG_USER,
+    PG_HOST,
+    PG_DATABASE,
+    PG_PASSWORD,
+    PG_PORT
+} = process.env;
+
+if (!PG_USER || !PG_HOST || !PG_DATABASE || !PG_PASSWORD || !PG_PORT) {
+    throw new Error("Missing required PostgreSQL environment variables (PG_USER, PG_HOST, PG_DATABASE, PG_PASSWORD, PG_PORT)");
+}
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'repository',
-    password: 'postgres',
-    port: 5432,
+    user: PG_USER,
+    host: PG_HOST,
+    database: PG_DATABASE,
+    password: PG_PASSWORD,
+    port: parseInt(PG_PORT, 10)
 });
 
 export class RentalPostgresRepository implements RentalRepository {

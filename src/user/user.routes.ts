@@ -1,12 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { registerUser, listUsers, getUserById, deleteUser} from './user.controller.js';
 import { login } from './auth.controller.js';
-import { userExtractor, requestLogger, isAdmin } from './auth.middleware.js';
+import { userExtractor, isAdmin } from './auth.middleware.js';
 
 const router = Router();
-
-// Logger para todas las rutas de usuario
-router.use(requestLogger);
 
 // Registro de usuario (Público)
 router.post('/register', registerUser);

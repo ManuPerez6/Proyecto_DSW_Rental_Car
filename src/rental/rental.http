@@ -2,14 +2,14 @@ POST http://localhost:3000/api/rentals
 Content-Type: application/json
 
 {
-  "userId": "68b1a8ba710c1b132d083734",
-  "carId": 1,
-  "startDate": "2024-07-01",
-  "endDate": "2024-07-10",
+  "userId": "690d71f6f66594ac1b13bb48",
+  "carId": 2,
+  "startDate": "2025-12-01",
+  "endDate": "2025-12-10",
   "price": 500.00,
   "status": "reserved"
 }
 ###
-GET http://localhost:3000/api/rentals/2
+GET http://localhost:3000/api/rentals/1
 ###
 

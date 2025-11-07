@@ -6,66 +6,108 @@ const carRepository = new CarPostgresRepository();
 
 export class CarController {
 
-    async findAllCars(req: Request, res: Response) {
-        const cars = await carRepository.findAll();
-        res.json(cars);
+    async findAllCars(_req: Request, res: Response) {
+        try {
+            const cars = await carRepository.findAll();
+            res.json(cars);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Server error retrieving cars' });
+        }
     }
 
     async findCarById(req: Request, res: Response) {
-        const carId = req.params.id;
-        const car = await carRepository.findOne(carId);
-        if (!car) {
-            res.status(404).json({
-                errorMessage: 'Car not found',
-                errorCode: 'CAR_NOT_FOUND'
-            });
-            return;
+        try {
+            const carId = Number(req.params.id);
+            
+            if (isNaN(carId)) {
+                res.status(400).json({ error: 'Invalid car ID' });
+                return;
+            }
+
+            const car = await carRepository.findOne(carId);
+            if (!car) {
+                res.status(404).json({
+                    errorMessage: 'Car not found',
+                    errorCode: 'CAR_NOT_FOUND'
+                });
+                return;
+            }
+            res.json(car);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Server error finding car' });
         }
-        res.json({ data: car });
     }
 
     async addCar(req: Request, res: Response) {
+        try {
+            const input = req.body;
+            const newCar = new Car(
+                undefined,
+                input.brand,
+                input.model,
+                input.year,
+                input.color,
+                input.price,
+                input.available
+            );
 
-        const input = req.body;
-        const newCar = new Car(
-            undefined,
-            input.brand,
-            input.model,
-            input.year,
-            input.color,
-            input.price,
-            input.available
-        );
+            const savedCar = await carRepository.add(newCar);
 
-        await carRepository.add(newCar);
+            res.status(201).json(savedCar);
 
-        res.status(201).json({ data: newCar });
-
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Server error adding car' });
+        }
     }
 
     async updateCar(req: Request, res: Response): Promise<void> {
-        const carId = req.params.id;
-        const input = req.body;
+        try {
+            const carId = Number(req.params.id);
+            
+            if (isNaN(carId)) {
+                res.status(400).json({ error: 'Invalid car ID' });
+                return;
+            }
 
-        const updatedCar = new Car(
-            carId,
-            input.brand,
-            input.model,
-            input.year,
-            input.color,
-            input.price,
-            input.available
-        );
+            const input = req.body;
 
-        await carRepository.update(carId, updatedCar);
+            const updatedCar = new Car(
+                carId,
+                input.brand,
+                input.model,
+                input.year,
+                input.color,
+                input.price,
+                input.available
+            );
 
-        res.status(201).json({ data: updatedCar });
+            const returnedCar = await carRepository.update(carId, updatedCar);
 
+            if (!returnedCar) {
+                res.status(404).json({ error: 'Car not found for update' });
+                return;
+            }
+
+            res.status(200).json(returnedCar);
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Server error updating car' });
+        }
     }
 
     async partialUpdateCar(req: Request, res: Response): Promise<void> {
       try {
-        const id = req.params.id;
+        const id = Number(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(400).json({ error: 'Invalid car ID' });
+            return;
+        }
+
         const updates = req.body.sanitizedInput;
 
         if (!updates || Object.keys(updates).length === 0) {
@@ -89,7 +131,12 @@ export class CarController {
 
     async deleteCar(req: Request, res: Response): Promise<void> {
         try {
-            const id = req.params.id;
+            const id = Number(req.params.id);
+
+            if (isNaN(id)) {
+                res.status(400).json({ error: 'Invalid car ID' });
+                return;
+            }
 
             const deleted = await carRepository.delete(id);
 
@@ -98,7 +145,7 @@ export class CarController {
                 return;
             }
 
-            res.status(200).json({ message: 'Car deleted successfully' });
+            res.status(204).send(); 
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Server error' });

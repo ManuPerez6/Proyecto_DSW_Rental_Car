@@ -1,13 +1,28 @@
 import { CarRepository } from "./car.repository.interface.js";
 import { Car } from "./car.entity.js";
 import { Pool } from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const {
+    PG_USER,
+    PG_HOST,
+    PG_DATABASE,
+    PG_PASSWORD,
+    PG_PORT
+} = process.env;
+
+if (!PG_USER || !PG_HOST || !PG_DATABASE || !PG_PASSWORD || !PG_PORT) {
+    throw new Error("Missing required PostgreSQL environment variables (PG_USER, PG_HOST, PG_DATABASE, PG_PASSWORD, PG_PORT)");
+}
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'repository',
-    password: 'postgres',
-    port: 5432,
+    user: PG_USER,
+    host: PG_HOST,
+    database: PG_DATABASE,
+    password: PG_PASSWORD,
+    port: parseInt(PG_PORT, 10)
 });
 
 export class CarPostgresRepository implements CarRepository {
@@ -16,12 +31,32 @@ export class CarPostgresRepository implements CarRepository {
 
     async findAll(): Promise<Car[] | undefined> {
         const res = await pool.query('SELECT * FROM cars');
-        return res.rows as Car[] || undefined;
+        return res.rows.map(row => new Car(
+            row.id,
+            row.brand,
+            row.model,
+            row.year,
+            row.color,
+            parseFloat(row.price),
+            row.available
+        ));
     }
 
-    async findOne(id: string): Promise<Car | undefined> {
+    async findOne(id: number): Promise<Car | undefined> { // CAMBIADO
         const res = await pool.query('SELECT * FROM cars WHERE id = $1', [id]);
-        return res.rows[0] as Car || undefined;
+        if (res.rows.length === 0) {
+            return undefined;
+        }
+        const row = res.rows[0];
+        return new Car(
+            row.id,
+            row.brand,
+            row.model,
+            row.year,
+            row.color,
+            parseFloat(row.price),
+            row.available
+        );
     }
 
     async add(car: Car): Promise<Car | undefined> {
@@ -30,27 +65,47 @@ export class CarPostgresRepository implements CarRepository {
                 'INSERT INTO cars (brand, model, year, color, price, available) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
                 [car.brand, car.model, car.year, car.color, car.price, car.available]
             );
-            return res.rows[0];
+            const row = res.rows[0];
+            // Devolvemos una nueva instancia de Car con los datos de la DB
+            return new Car(
+                row.id,
+                row.brand,
+                row.model,
+                row.year,
+                row.color,
+                parseFloat(row.price),
+                row.available
+            );
         } catch (error) {
             console.error('Error adding car:', error);
             return undefined;
         }
     }
 
-    async update(id: string, car: Car): Promise<Car | undefined> {
+    async update(id: number, car: Car): Promise<Car | undefined> {
         try {
             const res = await pool.query(
                 'UPDATE cars SET brand = $1, model = $2, year = $3, color = $4, price = $5, available = $6 WHERE id = $7 RETURNING *',
                 [car.brand, car.model, car.year, car.color, car.price, car.available, id]
             );
-            return res.rows[0];
+            if (res.rows.length === 0) return undefined;
+            const row = res.rows[0];
+            return new Car(
+                row.id,
+                row.brand,
+                row.model,
+                row.year,
+                row.color,
+                parseFloat(row.price),
+                row.available
+            );
         } catch (error) {
             console.error('Error updating car:', error);
             return undefined;
         }
     }
 
-    async partialUpdate(id: string, updates: Partial<Car>): Promise<Car | undefined> {
+    async partialUpdate(id: number, updates: Partial<Car>): Promise<Car | undefined> {
         try {
             const keys = Object.keys(updates);
             const values = Object.values(updates);
@@ -58,17 +113,37 @@ export class CarPostgresRepository implements CarRepository {
             const query = `UPDATE cars SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
 
             const res = await pool.query(query, [...values, id]);
-            return res.rows[0];
+            if (res.rows.length === 0) return undefined;
+            const row = res.rows[0];
+            return new Car(
+                row.id,
+                row.brand,
+                row.model,
+                row.year,
+                row.color,
+                parseFloat(row.price),
+                row.available
+            );
         } catch (error) {
             console.error('Error partially updating car:', error);
             return undefined;
         }
     }
 
-    async delete(id: string): Promise<Car | undefined> {
+    async delete(id: number): Promise<Car | undefined> { 
         try {
             const res = await pool.query('DELETE FROM cars WHERE id = $1 RETURNING *', [id]);
-            return res.rows[0];
+            if (res.rows.length === 0) return undefined;
+            const row = res.rows[0];
+            return new Car(
+                row.id,
+                row.brand,
+                row.model,
+                row.year,
+                row.color,
+                parseFloat(row.price),
+                row.available
+            );
         } catch (error) {
             console.error('Error deleting car:', error);
             return undefined;

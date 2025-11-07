@@ -11,7 +11,7 @@ rentalRouter.put('/:id', sanitizeRentalInput, rentalController.updateRental);
 rentalRouter.patch('/:id', sanitizeRentalInput, rentalController.partiallyUpdateRental);
 rentalRouter.delete('/:id', rentalController.deleteRental);
 
-function sanitizeRentalInput(req:any, res:any, next:any) {
+function sanitizeRentalInput(req:any, _res:any, next:any) {
   req.body.sanitizedInput = {
     userId: req.body.userId,
     carId: req.body.carId,

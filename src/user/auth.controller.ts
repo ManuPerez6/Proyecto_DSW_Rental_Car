@@ -16,9 +16,15 @@ export const login = async (req: Request, res: Response) => {
     username: user.username
   };
 
+  const secret = process.env.SECRET;
+  if (!secret) {
+    console.error('Missing SECRET environment variable');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+
   const token = jwt.sign(
     userForToken,
-    process.env.SECRET || 'secret', 
+    secret,
     { expiresIn: '1h' }
   );
 
