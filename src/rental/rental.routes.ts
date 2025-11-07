@@ -16,9 +16,7 @@ function sanitizeRentalInput(req:any, _res:any, next:any) {
     userId: req.body.userId,
     carId: req.body.carId,
     startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    price: req.body.price,
-    status: req.body.status
+    endDate: req.body.endDate
   };
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

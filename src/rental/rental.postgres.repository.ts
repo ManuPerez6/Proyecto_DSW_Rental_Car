@@ -28,9 +28,27 @@ const pool = new Pool({
 });
 
 export class RentalPostgresRepository implements RentalRepository {
-    public async updateCarAvailabilityIfReserved(rentalOrUpdates: { status?: string, car?: Car }) {
-        if (rentalOrUpdates.status === "reserved" && rentalOrUpdates.car) {
-            await pool.query('UPDATE cars SET available = false WHERE id = $1', [rentalOrUpdates.car.id]);
+
+    public async checkAvailability(carId: number, startDate: Date, endDate: Date, excludeRentalId?: number): Promise<boolean> {
+                        const query = `
+                                SELECT 1
+                                FROM rentals
+                                WHERE carid = $1
+                                    AND (startdate, enddate) OVERLAPS ($2::date, $3::date)
+                                      AND ($4::integer IS NULL OR id != $4::integer)
+                                LIMIT 1;
+                        `;
+                        const params = [carId, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0], excludeRentalId ?? null];
+        
+        try {
+            const res = await pool.query(query, params);
+            if (process.env.DEBUG_RENTAL_AVAIL !== '0') {
+                console.log('checkAvailability debug', { query: query.replace(/\s+/g, ' '), params, rows: res.rows });
+            }
+            return res.rows.length === 0;
+        } catch (error) {
+            console.error('Error checking availability:', error);
+            return false;
         }
     }
 
@@ -50,8 +68,8 @@ export class RentalPostgresRepository implements RentalRepository {
             const user = await findUserById(row.userid);
             if (user) {
                 const carObj = row.car;
-                const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, carObj.price, carObj.available);
-                const rental = new Rental(user, car, row.startdate, row.enddate, row.price, row.status, row.id);
+                const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, parseFloat(carObj.price), carObj.available);
+                const rental = new Rental(user, car, row.startdate, row.enddate, row.id, parseFloat(row.price));
                 rentals.push(rental);
             }
         }
@@ -86,8 +104,9 @@ export class RentalPostgresRepository implements RentalRepository {
                 return undefined;
             }
             const carObj = row.car;
-            const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, carObj.price, carObj.available);
-            return new Rental(user, car, row.startdate, row.enddate, row.price, row.status, row.id);
+            const car = new Car(carObj.id, carObj.brand, carObj.model, carObj.year, carObj.color, parseFloat(carObj.price), carObj.available);
+            
+            return new Rental(user, car, row.startdate, row.enddate, row.id, parseFloat(row.price));
         } catch (error) {
             console.error('Error finding rental with user and car:', error);
             return undefined;
@@ -96,10 +115,21 @@ export class RentalPostgresRepository implements RentalRepository {
 
     async add(rental: Rental): Promise<Rental | undefined> {
         try {
-            await this.updateCarAvailabilityIfReserved({ status: rental.status, car: rental.car });
+            const rawPrice = Number(rental.price);
+            const roundedPrice = Math.round(rawPrice * 100) / 100; // 2 decimales
+
+            if (!isFinite(roundedPrice) || Math.abs(roundedPrice) >= 1e8) {
+                console.error('Price out of bounds for NUMERIC(10,2):', { rawPrice, roundedPrice });
+                return undefined;
+            }
+
+            if (process.env.DEBUG_RENTAL_AVAIL !== '0') {
+                console.log('addRental debug', { userId: rental.user.id, carId: rental.car.id, startDate: rental.startDate, endDate: rental.endDate, rawPrice, roundedPrice });
+            }
+
             const res = await pool.query(
-                'INSERT INTO rentals (userId, carId, startDate, endDate, price, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [rental.user.id, rental.car.id, rental.startDate, rental.endDate, rental.price, rental.status]
+                'INSERT INTO rentals (userId, carId, startDate, endDate, price) VALUES ($1, $2, $3::date, $4::date, $5) RETURNING *',
+                [rental.user.id, rental.car.id, rental.startDate.toISOString().split('T')[0], rental.endDate.toISOString().split('T')[0], roundedPrice]
             );
             if (res.rows.length > 0) {
                 rental.id = res.rows[0].id;
@@ -113,10 +143,9 @@ export class RentalPostgresRepository implements RentalRepository {
 
     async update(id: number, rental: Rental): Promise<Rental | undefined> {
         try {
-            await this.updateCarAvailabilityIfReserved({ status: rental.status, car: rental.car });
             const res = await pool.query(
-                'UPDATE rentals SET userId = $1, carId = $2, startDate = $3, endDate = $4, price = $5, status = $6 WHERE id = $7 RETURNING *',
-                [rental.user.id, rental.car.id, rental.startDate, rental.endDate, rental.price, rental.status, id]
+                'UPDATE rentals SET userId = $1, carId = $2, startDate = $3, endDate = $4, price = $5 WHERE id = $6 RETURNING *',
+                [rental.user.id, rental.car.id, rental.startDate, rental.endDate, rental.price, id]
             );
             rental.id = res.rows[0].id;
             return rental;
@@ -128,13 +157,25 @@ export class RentalPostgresRepository implements RentalRepository {
 
     async partialUpdate(id: number, updates: Partial<Rental>): Promise<Rental | undefined> {
         try {
-            await this.updateCarAvailabilityIfReserved(updates);
+         
+            if ('status' in updates) {
+                delete (updates as any).status;
+            }
+
             const keys = Object.keys(updates);
+            if (keys.length === 0) {
+                return this.findOne(id);
+            }
+
             const values = Object.values(updates);
             const setClause = keys.map((key, i) => `${key} = $${i + 1}`).join(', ');
             const query = `UPDATE rentals SET ${setClause} WHERE id = $${keys.length + 1} RETURNING *`;
+            
             const res = await pool.query(query, [...values, id]);
-            return res.rows[0];
+            if (res.rows.length === 0) return undefined;
+            
+            return this.findOne(id);
+
         } catch (error) {
             console.error('Error partially updating rental:', error);
             return undefined;
@@ -144,7 +185,10 @@ export class RentalPostgresRepository implements RentalRepository {
     async delete(id: number): Promise<Rental | undefined> {
         try {
             const res = await pool.query('DELETE FROM rentals WHERE id = $1 RETURNING *', [id]);
-            return res.rows[0] as Rental || undefined;
+            if (res.rows.length === 0) return undefined;
+            
+            const row = res.rows[0];
+            return { id: row.id } as Rental; 
         } catch (error) {
             console.error('Error deleting rental:', error);
             return undefined;

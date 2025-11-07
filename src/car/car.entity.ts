@@ -10,4 +10,16 @@ export class Car {
         public available: boolean
     ) {}
 
+    toJSON() {
+        return {
+            id: this.id,
+            brand: this.brand,
+            model: this.model,
+            year: this.year,
+            color: this.color,
+            price: Math.round((this.price ?? 0) * 100) / 100,
+            available: this.available
+        };
+    }
+
 }

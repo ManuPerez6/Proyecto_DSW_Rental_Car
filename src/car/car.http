@@ -13,7 +13,7 @@ Content-Type: application/json
   "model": "Corolla",
   "year": 2022,
   "color": "Blue",
-  "price": 45000000,
+  "price": 450,
   "available": true
 }
 
@@ -32,11 +32,11 @@ Content-Type: application/json
 }
 
 ### modificar un car (PATCH - recurso parcial)
-PATCH http://localhost:3000/api/cars/1
+PATCH http://localhost:3000/api/cars/2
 Content-Type: application/json
 
 {
-  "price": 150000,
+  "price": 15000,
   "available": false
 }
 

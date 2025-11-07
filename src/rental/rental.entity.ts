@@ -1,5 +1,13 @@
-import { Car } from "../car/car.entity";
-import { IUser } from "../user/user.entity";
+import { Car } from "../car/car.entity.js";
+import { IUser } from "../user/user.entity.js";
+
+export function calculateDays(startDate: Date, endDate: Date): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays === 0 ? 1 : diffDays;
+}
 
 export class Rental {
     public id?: number;
@@ -7,38 +15,39 @@ export class Rental {
     public car: Car;
     public startDate: Date;
     public endDate: Date;
-    public price: number;
-    private _status: string;
+    public price: number; 
 
     constructor(
         user: IUser,
         car: Car,
         startDate: Date,
         endDate: Date,
-        price: number,
-        status: string,
-        id?: number
+        id?: number,
+        price?: number 
     ) {
         this.id = id;
         this.user = user;
         this.car = car;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.price = price;
-        this._status = status;
-        if (status === "reserved") {
-            this.car.available = false;
+        
+        if (price !== undefined) {
+            this.price = Math.round(Number(price) * 100) / 100;
+        } else {
+            const days = calculateDays(startDate, endDate);
+            this.price = Math.round((days * car.price) * 100) / 100; 
         }
     }
 
-    get status(): string {
-        return this._status;
-    }
-
-    set status(newStatus: string) {
-        this._status = newStatus;
-        if (newStatus === "reserved") {
-            this.car.available = false;
-        }
+    toJSON() {
+        return {
+            id: this.id,
+            user: this.user,
+            car: this.car,
+            // Serializar solo la parte de fecha (YYYY-MM-DD)
+            startDate: this.startDate instanceof Date ? this.startDate.toISOString().split('T')[0] : String(this.startDate),
+            endDate: this.endDate instanceof Date ? this.endDate.toISOString().split('T')[0] : String(this.endDate),
+            price: Math.round(this.price * 100) / 100
+        };
     }
 }

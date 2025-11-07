@@ -37,7 +37,7 @@ export class CarPostgresRepository implements CarRepository {
             row.model,
             row.year,
             row.color,
-            parseFloat(row.price),
+            normalizePrice(row.price),
             row.available
         ));
     }
@@ -54,7 +54,7 @@ export class CarPostgresRepository implements CarRepository {
             row.model,
             row.year,
             row.color,
-            parseFloat(row.price),
+            normalizePrice(row.price),
             row.available
         );
     }
@@ -73,7 +73,7 @@ export class CarPostgresRepository implements CarRepository {
                 row.model,
                 row.year,
                 row.color,
-                parseFloat(row.price),
+                normalizePrice(row.price),
                 row.available
             );
         } catch (error) {
@@ -96,7 +96,7 @@ export class CarPostgresRepository implements CarRepository {
                 row.model,
                 row.year,
                 row.color,
-                parseFloat(row.price),
+                normalizePrice(row.price),
                 row.available
             );
         } catch (error) {
@@ -121,7 +121,7 @@ export class CarPostgresRepository implements CarRepository {
                 row.model,
                 row.year,
                 row.color,
-                parseFloat(row.price),
+                normalizePrice(row.price),
                 row.available
             );
         } catch (error) {
@@ -141,7 +141,7 @@ export class CarPostgresRepository implements CarRepository {
                 row.model,
                 row.year,
                 row.color,
-                parseFloat(row.price),
+                normalizePrice(row.price),
                 row.available
             );
         } catch (error) {
@@ -149,4 +149,15 @@ export class CarPostgresRepository implements CarRepository {
             return undefined;
         }
     }
+}
+
+function normalizePrice(raw: any): number {
+    const n = Number(raw);
+    if (!isFinite(n) || isNaN(n)) return 0;
+    let value = n;
+    if (Math.abs(value) >= 100000) {
+        value = value / 100000;
+    }
+    
+    return Math.round(value * 100) / 100;
 }

@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS rentals (
   carId INT NOT NULL REFERENCES cars(id),
   startDate DATE NOT NULL,
   endDate DATE NOT NULL,
-  price DECIMAL(10, 2) NOT NULL,
-  status VARCHAR(20) NOT NULL DEFAULT 'available',
+  price DECIMAL(10, 2) NOT NULL, 
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -39,4 +38,3 @@ CREATE TRIGGER update_rentals_updated_at
     BEFORE UPDATE ON rentals
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
-    
