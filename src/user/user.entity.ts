@@ -4,6 +4,7 @@ export interface IUser extends Document {
   username: string;
   name: string;
   passwordHash: string;
+  role: 'user' | 'admin';
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,13 +24,20 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+
+  role: {
+    type: String,
+    required: true,
+    enum: ['user', 'admin'], 
+    default: 'user', 
+  },
 }, {
   timestamps: true,
   versionKey: false,
 });
 
 UserSchema.set('toJSON', {
-  transform: (doc, ret) => {
+  transform: (_doc, ret) => {
     ret.id = ret._id;
     delete ret._id;
     delete ret.passwordHash;

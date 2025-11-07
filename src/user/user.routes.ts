@@ -1,32 +1,32 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { registerUser, listUsers, getUserById, deleteUser} from './user.controller.js';
 import { login } from './auth.controller.js';
-import { userExtractor, requestLogger } from './auth.middleware.js';
+import { userExtractor, requestLogger, isAdmin } from './auth.middleware.js';
 
 const router = Router();
 
 // Logger para todas las rutas de usuario
 router.use(requestLogger);
 
-// Registro de usuario
-router.post('/', registerUser);
+// Registro de usuario (Público)
+router.post('/register', registerUser);
 
-// Login
+// Login (Público)
 router.post('/login', (req: Request, res: Response, next: NextFunction) => {
   login(req, res).catch(next);
 });
 
-// Listar usuarios (requiere autenticación)
-router.get('/', userExtractor, (req: Request, res: Response, next: NextFunction) => {
+// Listar usuarios (Requiere autenticación y ser ADMIN)
+router.get('/', userExtractor, isAdmin, (req: Request, res: Response, next: NextFunction) => {
   listUsers(req, res).catch(next);
 });
 
-// Obtener usuario único por ID
+// Obtener usuario único por ID (Lógica de seguridad en el controlador)
 router.get('/:id', userExtractor, (req: Request, res: Response, next: NextFunction) => {
   getUserById(req, res).catch(next); 
 });
 
-// Eliminar usuario por id (requiere autenticación y ser el propio usuario)
+// Eliminar usuario por id (Lógica de seguridad en el controlador)
 router.delete('/:id', userExtractor, async (req: Request, res: Response, next: NextFunction) => {
   deleteUser(req,res).catch(next);
 });

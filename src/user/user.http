@@ -2,10 +2,27 @@ POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-  "username": "testuser",
-  "password": "secure12345"
+"username": "admin",
+"password": "adminpass"
+}
+
+###
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+"username": "admin",
+"name": "Admin User",
+"password": "adminpass",
+"role": "admin"
 }
 
 ###
 GET http://localhost:3000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YjFhOGJhNzEwYzFiMTMyZDA4MzczNCIsImlhdCI6MTc1NjQ3NTgwOCwiZXhwIjoxNzU2NDc5NDA4fQ.-vJGX1FgkB0bPk4QWDIQ0r04Aw6I5zbBkpZCP0ipg14
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGQ3Zjc5MTFjOTNmOWJmNmNiYjIzNyIsInJvbGUiOiJ1c2VyIiwidXNlcm5hbWUiOiJhbGljZSIsImlhdCI6MTc2MjQ5MjU4NCwiZXhwIjoxNzYyNDk2MTg0fQ.-Udhisil97WsETnwi6t2K2zQtutTUXhoN_UEPdx70R4
+
+###
+GET http://localhost:3000/api/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGQ4MDc5ZDY2ZDMxM2Q0YzRhMGFiYSIsInJvbGUiOiJhZG1pbiIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3NjI0OTMyMjgsImV4cCI6MTc2MjQ5NjgyOH0.nC2Dz8lHo4ZdPyvd8796oKvlzdgh0O0NXXB0DbX9mHQ
+
+

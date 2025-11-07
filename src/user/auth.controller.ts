@@ -9,6 +9,18 @@ export const login = async (req: Request, res: Response) => {
   if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
     return res.status(401).json({ error: 'Credenciales inválidas' });
   }
-  const token = jwt.sign({ id: user._id }, process.env.SECRET || 'secret', { expiresIn: '1h' });
-  res.json({ token, username: user.username, name: user.name });
+
+  const userForToken = {
+    id: user._id,
+    role: user.role,
+    username: user.username
+  };
+
+  const token = jwt.sign(
+    userForToken,
+    process.env.SECRET || 'secret', 
+    { expiresIn: '1h' }
+  );
+
+  res.json({ id: user._id, token, username: user.username, name: user.name, role: user.role });
 };

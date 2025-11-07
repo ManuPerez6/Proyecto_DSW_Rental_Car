@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "npm run build && cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "tsc -p ./tsconfig.json",
     "start:dev": "tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./dist/app.js\""
   },
@@ -18,13 +18,14 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.15.21",
+    "@types/pg": "^8.15.4",
+    "cross-env": "^10.1.0",
     "jest": "^30.0.5",
     "ts-jest": "^29.4.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@types/pg": "^8.15.4",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
