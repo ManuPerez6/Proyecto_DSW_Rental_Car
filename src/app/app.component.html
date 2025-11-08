@@ -1,8 +1,20 @@
-<mat-toolbar color="primary">
-  <span class="app-title" routerLink="/">Alquiler de autos</span>
+<mat-toolbar color="primary" class="main-toolbar">
+  <div class="toolbar-content container-fluid">
+    <span class="app-title" routerLink="/">Alquiler de autos</span>
+    
+    <nav class="navbar navbar-expand-lg">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" routerLink="/">Home</a>
+          <a class="nav-link" routerLink="/characters">Contactos</a> 
+          <a class="nav-link" routerLink="/pricing">Nuestros modelos</a> 
+        </div>
+      </div>
+    </nav>
+  </div>
 </mat-toolbar>
 <main class="main-content">
-  <div class="container">
+  <div class="container main-page-container">
     <router-outlet></router-outlet>
   </div>
 </main>
