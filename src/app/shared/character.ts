@@ -1,10 +1,7 @@
 export interface Character {
-  id?: string;
-  name: string;
-  characterClass?: string;
-  level: number;
-  hp: number;
-  mana: number;
-  attack: number;
-  items: string[];
+  Marca: string;
+  Modelo: string;
+  Año: number;
+  Color: string;
+  Precio: number;
 }

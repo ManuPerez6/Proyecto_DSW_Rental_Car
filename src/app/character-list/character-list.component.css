@@ -43,7 +43,7 @@ button:last-child:hover {
 
 button[routerLink="/character/new"] {
   margin-top: 1rem;
-  background-color: #28a745;
+  background-color: #0056b3;
 }
 
 button[routerLink="/character/new"]:hover {
@@ -187,7 +187,7 @@ tr.mat-row:hover {
   .table-container {
     overflow-x: auto;
   }
-  
+
   table {
     min-width: 800px;
   }

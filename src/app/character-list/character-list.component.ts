@@ -16,7 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   selector: 'app-character-list',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     MatTableModule,
     MatButtonModule,
