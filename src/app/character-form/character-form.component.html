@@ -8,51 +8,51 @@
       <mat-card-content>
         <div class="form-grid">
           <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Marca</mat-label>
             <input matInput type="text" formControlName="name" required>
             <mat-error *ngIf="characterForm.get('name')?.hasError('required')">
-              El nombre es requerido
+              La Marca es requerida
             </mat-error>
           </mat-form-field>
           
           <mat-form-field appearance="outline">
-            <mat-label>Clase</mat-label>
+            <mat-label>Modelo</mat-label>
             <input matInput type="text" formControlName="characterClass" required>
             <mat-error *ngIf="characterForm.get('characterClass')?.hasError('required')">
-              La clase es requerida
+              El Modelo es requerido
             </mat-error>
           </mat-form-field>
           
           <mat-form-field appearance="outline">
-            <mat-label>Nivel</mat-label>
-            <input matInput type="number" formControlName="level" min="1" required>
+            <mat-label>Año "mayor a 2000"</mat-label>
+            <input matInput type="number" formControlName="level" min="2000" required>
             <mat-error *ngIf="characterForm.get('level')?.hasError('required')">
-              El nivel es requerido
+              El Año es requerido
             </mat-error>
             <mat-error *ngIf="characterForm.get('level')?.hasError('min')">
-              El nivel mínimo es 1
+              El Año mínimo es del 2000
             </mat-error>
           </mat-form-field>
           
           <mat-form-field appearance="outline">
-            <mat-label>PV</mat-label>
+            <mat-label>Color</mat-label>
             <input matInput type="number" formControlName="hp" min="1" required>
             <mat-error *ngIf="characterForm.get('hp')?.hasError('required')">
-              Los PV son requeridos
+              El Color es requerido
             </mat-error>
             <mat-error *ngIf="characterForm.get('hp')?.hasError('min')">
-              Los PV deben ser al menos 1
+              El color deben ser al menos 1
             </mat-error>
           </mat-form-field>
           
           <mat-form-field appearance="outline">
-            <mat-label>Maná</mat-label>
+            <mat-label>Precio</mat-label>
             <input matInput type="number" formControlName="mana" min="0" required>
             <mat-error *ngIf="characterForm.get('mana')?.hasError('required')">
-              El maná es requerido
+              El Precio es requerido
             </mat-error>
             <mat-error *ngIf="characterForm.get('mana')?.hasError('min')">
-              El maná no puede ser negativo
+              El Precio no puede ser negativo
             </mat-error>
           </mat-form-field>
           

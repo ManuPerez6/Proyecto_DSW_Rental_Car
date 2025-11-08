@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { CharacterListComponent } from './character-list/character-list.component';
 import { CharacterDetailComponent } from './character-detail/character-detail.component';
 import { CharacterFormComponent } from './character-form/character-form.component';
+import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/characters', pathMatch: 'full' },
@@ -9,5 +10,7 @@ export const routes: Routes = [
   { path: 'character/new', component: CharacterFormComponent },
   { path: 'character/:id', component: CharacterDetailComponent },
   { path: 'character/:id/edit', component: CharacterFormComponent },
-  { path: '**', redirectTo: '/characters' }
+  { path: '**', redirectTo: '/characters' },
+  { path: '', component: HomeComponent },
+  { path: 'characters', component: CharacterListComponent }
 ];
