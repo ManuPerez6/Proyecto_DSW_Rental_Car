@@ -3,6 +3,7 @@ import { Rental, calculateDays } from "./rental.entity.js";
 import { RentalPostgresRepository } from "./rental.postgres.repository.js";
 import { CarPostgresRepository } from "../car/car.postgres.repository.js";
 import { findUserById } from "../user/user.service.js";
+import { parseSQLDate } from "../utils/date.utils.js";
 
 const rentalRepository = new RentalPostgresRepository();
 const carRepository = new CarPostgresRepository();
@@ -46,8 +47,8 @@ export class RentalController {
             const input = req.body; 
 
             // 1. Validar Fechas
-            const startDate = new Date(input.startDate);
-            const endDate = new Date(input.endDate);
+            const startDate = parseSQLDate(input.startDate);
+            const endDate = parseSQLDate(input.endDate);
 
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 res.status(400).json({ error: 'Formato de fecha inválido' });
@@ -118,8 +119,8 @@ export class RentalController {
             const input = req.body;
 
             // 1. Validar Fechas
-            const startDate = new Date(input.startDate);
-            const endDate = new Date(input.endDate);
+            const startDate = parseSQLDate(input.startDate);
+            const endDate = parseSQLDate(input.endDate);
 
             if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
                 res.status(400).json({ error: 'Formato de fecha inválido' });
@@ -201,8 +202,8 @@ export class RentalController {
 
             const carId = input.carId ?? existingRental.car.id;
             const userId = input.userId ?? existingRental.user.id;
-            const startDate = new Date(input.startDate ?? existingRental.startDate);
-            const endDate = new Date(input.endDate ?? existingRental.endDate);
+            const startDate = parseSQLDate(input.startDate ?? existingRental.startDate);
+            const endDate = parseSQLDate(input.endDate ?? existingRental.endDate);
 
             // 1. Validar Fechas
             if (endDate <= startDate) {
@@ -239,8 +240,8 @@ export class RentalController {
 
             const patchData: Partial<Rental> = {
                 ...input,
-                user: user,
-                car: car,
+                userId: user.id,
+                carId: car.id,
                 price: calculatedPrice,
             };
             

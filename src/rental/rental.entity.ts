@@ -1,5 +1,6 @@
 import { Car } from "../car/car.entity.js";
 import { IUser } from "../user/user.entity.js";
+import { formatDisplayDate } from "../utils/date.utils.js";
 
 export function calculateDays(startDate: Date, endDate: Date): number {
     const start = new Date(startDate);
@@ -44,10 +45,9 @@ export class Rental {
             id: this.id,
             user: this.user,
             car: this.car,
-            // Serializar solo la parte de fecha (YYYY-MM-DD)
-            startDate: this.startDate instanceof Date ? this.startDate.toISOString().split('T')[0] : String(this.startDate),
-            endDate: this.endDate instanceof Date ? this.endDate.toISOString().split('T')[0] : String(this.endDate),
-            price: Math.round(this.price * 100) / 100
+            startDate: formatDisplayDate(this.startDate),
+            endDate: formatDisplayDate(this.endDate),
+            price: Math.round(this.price * 100) / 100,
         };
     }
 }
