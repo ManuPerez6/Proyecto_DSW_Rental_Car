@@ -122,28 +122,28 @@ mat-card-actions {
   .table-container {
     padding: 0 8px;
   }
-  
+
   .table-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .table-header h2 {
     font-size: 1.5rem;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   mat-card-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
-  
+
   mat-card-actions button {
     width: 100%;
     margin: 0;

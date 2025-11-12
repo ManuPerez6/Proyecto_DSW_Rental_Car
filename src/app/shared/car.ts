@@ -1,7 +1,9 @@
-export interface Character {
+export interface Car {
+  id: number;
   Marca: string;
   Modelo: string;
-  Año: number;
+  Year: number;
   Color: string;
   Precio: number;
 }
+

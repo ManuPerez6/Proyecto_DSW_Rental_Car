@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { CharacterService } from '../shared/character.service';
-import { Character } from '../shared/character';
+import { CarService } from '../shared/car.service';
+import { Car } from '../shared/car';
 import { Subscription } from 'rxjs';
 
 // Angular Material
@@ -15,10 +15,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
-  selector: 'app-character-detail',
+  selector: 'app-car-detail',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterModule,
     MatCardModule,
     MatButtonModule,
@@ -28,11 +28,11 @@ import { MatChipsModule } from '@angular/material/chips';
     MatProgressSpinnerModule,
     MatChipsModule
   ],
-  templateUrl: './character-detail.component.html',
-  styleUrls: ['./character-detail.component.css']
+  templateUrl: './car-detail.component.html',
+  styleUrls: ['./car-detail.component.css']
 })
-export class CharacterDetailComponent implements OnInit, OnDestroy {
-  character: Character | null = null;
+export class CarDetailComponent implements OnInit, OnDestroy {
+  car: Car | null = null;
   loading = true;
   error: string | null = null;
   private subscription: Subscription = new Subscription();
@@ -40,26 +40,26 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private characterService: CharacterService
+    private carService: CarService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.loadCharacter(id);
+      this.loadCar(id as string);
     }
   }
 
-  loadCharacter(id: string): void {
+  loadCar(id: string): void {
     this.loading = true;
     this.subscription.add(
-      this.characterService.getCharacter(id).subscribe({
-        next: (data: Character) => {
-          this.character = data;
+      this.carService.getCar(id).subscribe({
+        next: (data: Car) => {
+          this.car = data;
           this.loading = false;
         },
         error: (err: any) => {
-          this.error = 'Error al cargar el personaje. Por favor, inténtalo de nuevo.';
+          this.error = 'Error al cargar el auto. Por favor, inténtalo de nuevo.';
           this.loading = false;
         },
         complete: () => {
@@ -68,15 +68,15 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
     );
   }
 
-  deleteCharacter(): void {
-    if (!this.character?.id) return;
-    
-    if (confirm('¿Estás seguro de que quieres eliminar este personaje?')) {
+  deleteCar(): void {
+    if (!this.car?.id) return;
+
+    if (confirm('¿Estás seguro de que quieres eliminar esta reserva?')) {
       this.subscription.add(
-        this.characterService.deleteCharacter(this.character.id).subscribe({
+        this.carService.deleteCar(this.car.id).subscribe({
           next: () => this.goBack(),
           error: (err: any) => {
-            this.error = 'Error al eliminar el personaje. Por favor, inténtalo de nuevo.';
+            this.error = 'Error al eliminar el auto. Por favor, inténtalo de nuevo.';
           }
         })
       );
@@ -84,7 +84,7 @@ export class CharacterDetailComponent implements OnInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/characters']);
+    this.router.navigate(['/cars']);
   }
 
   ngOnDestroy(): void {
