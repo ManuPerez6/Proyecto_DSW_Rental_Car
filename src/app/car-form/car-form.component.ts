@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, FormArray, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CarService } from '../shared/car.service';
 import { Car } from '../shared/car';
@@ -11,10 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'; 
 
 @Component({
   selector: 'app-car-form',
@@ -22,17 +22,15 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule,
     RouterModule,
-    // Angular Material
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTooltipModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatDividerModule
+    MatDividerModule,
+    MatSlideToggleModule 
   ],
   templateUrl: './car-form.component.html',
   styleUrls: ['./car-form.component.css']
@@ -50,23 +48,16 @@ export class CarFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private carService: CarService
-  ) {
-    this.carForm = this.fb.group({
-      Marca: ['', Validators.required],
-      Modelo: ['', Validators.required],
-      Year: [2020, [Validators.required, Validators.min(2000)]],
-      Color: ['', Validators.required],
-      Precio: [0, [Validators.required, Validators.min(0)]]
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.carForm = this.fb.group({
-      Marca: ['', Validators.required],
-      Modelo: ['', Validators.required],
-      Year: [2020, [Validators.required, Validators.min(2000)]],
-      Color: ['', Validators.required],
-      Precio: [0, [Validators.required, Validators.min(0)]]
+      brand: ['', Validators.required],
+      model: ['', Validators.required],
+      year: [new Date().getFullYear(), [Validators.required, Validators.min(2000)]],
+      color: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+      available: [true, Validators.required] 
     });
 
     this.carId = this.route.snapshot.paramMap.get('id');
@@ -89,19 +80,19 @@ export class CarFormComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.carService.getCar(id).subscribe({
         next: (car: Car) => {
+
           this.carForm.patchValue({
-            Marca: car.Marca,
-            Modelo: car.Modelo,
-            Year: car.Year,
-            Color: car.Color,
-            Precio: car.Precio,
+            brand: car.brand,
+            model: car.model,
+            year: car.year,
+            color: car.color,
+            price: car.price,
+            available: car.available 
           });
           this.loading = false;
         },
-
         error: (err: any) => {
-          console.error('Error cargando el auto', err);
-          this.error = 'Error cargandoel auto. Reintente.';
+          this.error = 'Error cargando el auto. Reintente.';
           this.loading = false;
         }
       })
@@ -112,11 +103,11 @@ export class CarFormComponent implements OnInit, OnDestroy {
     if (this.carForm.valid) {
       this.loading = true;
       this.error = null;
-      const carData: Omit<Car, 'id'> = this.carForm.value;
+      const carData: Omit<Car, 'id' | 'imageUrl'> = this.carForm.value; 
 
       let request;
       if (this.isEditMode && this.carId) {
-        request = this.carService.updateCar(this.carId, carData);
+        request = this.carService.updateCar(this.carId, this.carForm.value);
       } else {
         request = this.carService.addCar(carData);
       }
@@ -125,10 +116,9 @@ export class CarFormComponent implements OnInit, OnDestroy {
         request.subscribe({
           next: () => {
             this.loading = false;
-            this.router.navigate(['/cars']);
+            this.router.navigate(['/car']);
           },
           error: (err: any) => {
-            console.error('Error guardando el auto:', err);
             this.error = `Error al ${this.isEditMode ? 'actualizar' : 'agregar'} el auto.`;
             this.loading = false;
           }
@@ -138,6 +128,6 @@ export class CarFormComponent implements OnInit, OnDestroy {
   }
 
   onCancel(): void {
-    this.router.navigate(['/cars']);
+    this.router.navigate(['/car']);
   }
 }

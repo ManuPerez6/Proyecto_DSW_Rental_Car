@@ -1,16 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CarService } from '../shared/car.service';
 import { Car } from '../shared/car';
+import { AuthService } from '../shared/auth.service';
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 // Angular Material
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 @Component({
   selector: 'app-car-list',
@@ -18,65 +26,113 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   imports: [
     CommonModule,
     RouterModule,
-    MatTableModule,
+    AsyncPipe,
+    ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatToolbarModule
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatChipsModule
   ],
   templateUrl: './car-list.component.html',
   styleUrls: ['./car-list.component.css']
 })
 export class CarListComponent implements OnInit {
-  displayedColumns: string[] = ['Marca', 'Modelo', 'Year', 'Color', 'Precio'];
-  dataSource: Car[] = [];
+  
+  allCars: Car[] = []; 
+  filteredCars: Car[] = [];
+  
   loading = true;
   error: string | null = null;
+  isAdmin$: Observable<boolean>;
 
-  constructor(private carService: CarService) {}
+  filterForm: FormGroup;
+  private filterSub!: Subscription;
 
-
-  ngOnInit(): void {
-    this.loadCar();
+  constructor(
+    private carService: CarService,
+    private authService: AuthService,
+    private fb: FormBuilder
+  ) {
+    this.isAdmin$ = this.authService.isAdmin$;
+    
+    this.filterForm = this.fb.group({
+      searchText: [''],
+      showAvailableOnly: [true]
+    });
   }
 
-  loadCar(): void {
+  ngOnInit(): void {
+    this.loadCars();
+    
+    this.filterSub = this.filterForm.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ).subscribe(values => {
+      this.applyFilters(values.searchText, values.showAvailableOnly);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.filterSub) {
+      this.filterSub.unsubscribe();
+    }
+  }
+
+  loadCars(): void {
     this.loading = true;
-    console.log('Reservando auto...');
     this.carService.getCars().subscribe({
       next: (data) => {
-        console.log('Auto recibido:', data);
-        this.dataSource = Array.isArray(data) ? data : [];
+        this.allCars = Array.isArray(data) ? data : [];
+        this.applyFilters(
+          this.filterForm.value.searchText, 
+          this.filterForm.value.showAvailableOnly
+        );
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al cargar el auto', err);
-        this.error = 'Error Al cargar el auto. Inténtelo más tarde .';
-        this.dataSource = [];
+        this.error = 'Error al cargar los autos. Inténtelo más tarde.';
         this.loading = false;
       }
+    });
+  }
+
+  applyFilters(searchText: string, showAvailableOnly: boolean): void {
+    const filterText = searchText.toLowerCase().trim();
+    
+    this.filteredCars = this.allCars.filter(car => {
+      const availableMatch = !showAvailableOnly || car.available;
+      
+      const textMatch = filterText === '' || 
+        car.brand.toLowerCase().includes(filterText) ||
+        car.model.toLowerCase().includes(filterText) ||
+        car.year.toString().includes(filterText);
+        
+      return availableMatch && textMatch;
     });
   }
 
   deleteCar(id: number): void {
-  if (confirm('¿Estás seguro de que quieres eliminar este auto?')) {
-    this.loading = true;
-    this.carService.deleteCar(id).subscribe({
-      next: () => {
-
-        this.dataSource = this.dataSource.filter((car: Car) => car.id !== id);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al eliminar el auto', err);
-        this.error = 'Error al eliminar el auto. Por favor, inténtalo de nuevo.';
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      }
-    });
+    if (confirm('¿Estás seguro de que quieres eliminar este auto?')) {
+      this.loading = true;
+      this.carService.deleteCar(id).subscribe({
+        next: () => {
+          this.allCars = this.allCars.filter((car: Car) => car.id !== id);
+          this.applyFilters(
+            this.filterForm.value.searchText, 
+            this.filterForm.value.showAvailableOnly
+          );
+          this.loading = false;
+        },
+        error: (err) => {
+          this.error = 'Error al eliminar el auto. Por favor, inténtalo de nuevo.';
+          this.loading = false;
+        }
+      });
+    }
   }
-}
 }

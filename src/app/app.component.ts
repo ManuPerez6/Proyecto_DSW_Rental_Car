@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { CommonModule, AsyncPipe } from '@angular/common'; 
+import { AuthService } from './shared/auth.service'; 
+import { Observable } from 'rxjs';
+import { User } from './shared/user';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
     CommonModule, 
     RouterOutlet, 
     RouterLink,
+    AsyncPipe,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -24,5 +28,14 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'Gestor de Personajes';
+  title = 'Alquiler de autos';
+  currentUser$: Observable<User | null>;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.currentUser$ = this.authService.currentUser$; 
+  }
+
+  logout(): void {
+    this.authService.logout();
+  }
 }

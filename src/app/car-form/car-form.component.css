@@ -86,7 +86,6 @@ mat-form-field {
   width: 20px;
 }
 
-/* Acciones del formulario */
 .form-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -97,7 +96,6 @@ mat-form-field {
   border-top: 1px solid #eee;
 }
 
-/* Estilos para los botones */
 button[mat-raised-button] {
   display: flex;
   align-items: center;
@@ -113,7 +111,6 @@ button[mat-button] {
   gap: 8px;
 }
 
-/* Estilos responsivos */
 @media (max-width: 768px) {
   .character-form {
     grid-template-columns: 1fr;
@@ -130,14 +127,12 @@ button[mat-button] {
   }
 }
 
-/* Estilos para mensajes de error */
 mat-error {
   font-size: 0.75rem;
   line-height: 1.2;
   margin-top: 4px;
 }
 
-/* Estilo para el botón de eliminar objeto */
 button[mat-icon-button] {
   margin-left: 8px;
 }
@@ -231,4 +226,12 @@ button[disabled] {
   background-color: #f8f9fa;
   border-radius: 4px;
   border: 1px solid #dee2e6;
+}
+
+.form-grid {
+  align-items: center;
+}
+
+.toggle-container {
+  padding: 10px 0;
 }

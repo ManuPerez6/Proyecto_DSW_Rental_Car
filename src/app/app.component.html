@@ -1,18 +1,20 @@
 <mat-toolbar color="primary" class="main-toolbar">
   <div class="toolbar-content container-fluid">
-    <span class="app-title" routerLink="/">Alquiler de autos</span>
+    <span class="app-title" routerLink="/">{{ title }}</span>
     
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" *ngIf="currentUser$ | async">
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-link" routerLink="/">Home</a>
-          <a class="nav-link" routerLink="/characters">Contactos</a> 
-          <a class="nav-link" routerLink="/pricing">Nuestros modelos</a> 
-        </div>
+          <a class="nav-link" routerLink="/car">Inventario</a> </div>
       </div>
     </nav>
-  </div>
+
+    <span class="spacer"></span>
+
+    </div>
 </mat-toolbar>
+
 <main class="main-content">
   <div class="container main-page-container">
     <router-outlet></router-outlet>

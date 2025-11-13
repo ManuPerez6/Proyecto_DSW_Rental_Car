@@ -9,51 +9,58 @@
         <div class="form-grid">
           <mat-form-field appearance="outline">
             <mat-label>Marca</mat-label>
-            <input matInput type="text" formControlName="Marca" required>
-            <mat-error *ngIf="carForm.get('Marca')?.hasError('required')">
+            <input matInput type="text" formControlName="brand" required>
+            <mat-error *ngIf="carForm.get('brand')?.hasError('required')">
               La Marca es requerida
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Modelo</mat-label>
-            <input matInput type="text" formControlName="Modelo" required>
-            <mat-error *ngIf="carForm.get('Modelo')?.hasError('required')">
+            <input matInput type="text" formControlName="model" required>
+            <mat-error *ngIf="carForm.get('model')?.hasError('required')">
               El Modelo es requerido
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Year (mayor a 2000)</mat-label>
-            <input matInput type="number" formControlName="Year" min="2000" required>
-            <mat-error *ngIf="carForm.get('Year')?.hasError('required')">
-              El Year es requerido
+            <mat-label>Año (mayor a 2000)</mat-label>
+            <input matInput type="number" formControlName="year" min="2000" required>
+            <mat-error *ngIf="carForm.get('year')?.hasError('required')">
+              El Año es requerido
             </mat-error>
-            <mat-error *ngIf="carForm.get('Year')?.hasError('min')">
-              El Year mínimo es del 2000
+            <mat-error *ngIf="carForm.get('year')?.hasError('min')">
+              El Año mínimo es 2000
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Color</mat-label>
-            <input matInput type="text" formControlName="Color" required>
-            <mat-error *ngIf="carForm.get('Color')?.hasError('required')">
+            <input matInput type="text" formControlName="color" required>
+            <mat-error *ngIf="carForm.get('color')?.hasError('required')">
               El Color es requerido
             </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Precio</mat-label>
-            <input matInput type="number" formControlName="Precio" min="0" required>
-            <mat-error *ngIf="carForm.get('Precio')?.hasError('required')">
+            <mat-label>Precio por día</mat-label>
+            <input matInput type="number" formControlName="price" min="0" required>
+            <span matTextPrefix>$&nbsp;</span>
+            <mat-error *ngIf="carForm.get('price')?.hasError('required')">
               El Precio es requerido
             </mat-error>
-            <mat-error *ngIf="carForm.get('Precio')?.hasError('min')">
+            <mat-error *ngIf="carForm.get('price')?.hasError('min')">
               El Precio no puede ser negativo
             </mat-error>
           </mat-form-field>
-        </div>
 
+          <div class="toggle-container">
+            <mat-slide-toggle formControlName="available" color="primary">
+              Disponible para alquilar
+            </mat-slide-toggle>
+          </div>
+
+        </div>
         <mat-divider class="divider"></mat-divider>
       </mat-card-content>
 
@@ -62,7 +69,7 @@
           <mat-icon>cancel</mat-icon>
           Cancelar
         </button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!carForm.valid">
+        <button mat-raised-button color="primary" type="submit" [disabled]="!carForm.valid || loading">
           <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
           {{ isEditMode ? 'Actualizar' : 'Crear' }}
         </button>
