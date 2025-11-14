@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { CommonModule, CurrencyPipe, AsyncPipe } from '@angular/common'; // Importar AsyncPipe
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarService } from '../../shared/services/car.service';
 import { Car } from '../../shared/entities/car';
-import { Observable, Subscription } from 'rxjs'; // Importar Observable
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../shared/services/auth.service';
 import { RentalService } from '../../shared/services/rental.service';
 
@@ -30,7 +30,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     RouterModule,
     ReactiveFormsModule,
     CurrencyPipe,
-    AsyncPipe,
     MatCardModule,
     MatButtonModule,
     MatIconModule,

@@ -21,11 +21,15 @@ export class RentalService {
     return this.http.get<Rental>(`${this.apiUrl}/${id}`);
   }
 
+  updateRental(id: number, rental: Rental): Observable<Rental> {
+    return this.http.put<Rental>(`${this.apiUrl}/edit/${id}`, rental);
+  }
+
   addRental(rentalData: { userId: string; carId: number; startDate: string; endDate: string }): Observable<Rental> {
-    return this.http.post<Rental>(this.apiUrl, rentalData);
+    return this.http.post<Rental>(`${this.apiUrl}/new`, rentalData);
   }
   
   deleteRental(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 }

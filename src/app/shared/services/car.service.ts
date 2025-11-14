@@ -22,14 +22,14 @@ export class CarService {
   }
 
   addCar(car: Omit<Car, 'id'>): Observable<Car> {
-    return this.http.post<Car>(this.apiUrl, car);
+    return this.http.post<Car>(`${this.apiUrl}/new`, car);
   }
 
   updateCar(id: number, car: Car): Observable<Car> {
-    return this.http.put<Car>(`${this.apiUrl}/${id}`, car);
+    return this.http.put<Car>(`${this.apiUrl}/edit/${id}`, car);
   }
 
   deleteCar(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 }

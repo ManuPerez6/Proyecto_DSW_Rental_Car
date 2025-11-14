@@ -70,7 +70,6 @@ export class CarListComponent implements OnInit, OnDestroy {
     });
   }
 
-
   ngOnInit(): void {
     this.loadCars();
     
