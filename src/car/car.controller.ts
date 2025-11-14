@@ -50,7 +50,7 @@ export class CarController {
                 input.year,
                 input.color,
                 input.price,
-                input.available
+                true
             );
 
             const savedCar = await carRepository.add(newCar);
@@ -72,6 +72,12 @@ export class CarController {
                 return;
             }
 
+            const existingCar = await carRepository.findOne(carId);
+            if (!existingCar) {
+                res.status(404).json({ error: 'Car not found for update' });
+                return;
+            }
+
             const input = req.body;
 
             const updatedCar = new Car(
@@ -81,15 +87,10 @@ export class CarController {
                 input.year,
                 input.color,
                 input.price,
-                input.available
+                existingCar.available
             );
 
             const returnedCar = await carRepository.update(carId, updatedCar);
-
-            if (!returnedCar) {
-                res.status(404).json({ error: 'Car not found for update' });
-                return;
-            }
 
             res.status(200).json(returnedCar);
 

@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { findUserByUsername } from './user.service.js';
+import { findUserByMail } from './user.service.js';
 
 export const login = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  const user = await findUserByUsername(username);
+  const { mail, password } = req.body;
+
+  const user = await findUserByMail(mail);
+  
   if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
     return res.status(401).json({ error: 'Credenciales inválidas' });
   }
@@ -13,7 +15,7 @@ export const login = async (req: Request, res: Response) => {
   const userForToken = {
     id: user._id,
     role: user.role,
-    username: user.username
+    mail: user.mail
   };
 
   const secret = process.env.SECRET;
@@ -28,5 +30,6 @@ export const login = async (req: Request, res: Response) => {
     { expiresIn: '1h' }
   );
 
-  res.json({ id: user._id, token, username: user.username, name: user.name, role: user.role });
+
+  res.json({ id: user._id, token, mail: user.mail, name: user.name, role: user.role });
 };

@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IUser extends Document {
-  username: string;
+  mail: string;
   name: string;
   passwordHash: string;
   role: 'user' | 'admin';
@@ -10,11 +10,17 @@ export interface IUser extends Document {
 }
 
 const UserSchema: Schema = new Schema({
-  username: {
+  mail: {
     type: String,
-    required: true,
+    required: [true, 'El email es obligatorio'],
     unique: true,
-    minlength: [3, 'El nombre de usuario debe tener al menos 3 caracteres'],
+    // Validación de formato de email
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'Por favor ingrese un email válido'
+    ],
+    trim: true,
+    lowercase: true,
   },
   name: {
     type: String,
@@ -24,7 +30,6 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-
   role: {
     type: String,
     required: true,

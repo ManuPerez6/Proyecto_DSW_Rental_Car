@@ -2,8 +2,8 @@ POST http://localhost:3000/api/rentals
 Content-Type: application/json
 
 {
-  "userId": "690e5638312cfa18d23eb950",
-  "carId": 2,
+  "userId": "6916bd964324ff58d937a115",
+  "carId": 4,
   "startDate": "03/04/2004",
   "endDate": "06/04/2004"
 }

@@ -2,7 +2,7 @@ POST http://localhost:3000/api/users/login
 Content-Type: application/json
 
 {
-"username": "admin",
+"mail": "admin@example.com",
 "password": "adminpass"
 }
 
@@ -11,7 +11,7 @@ POST http://localhost:3000/api/users/register
 Content-Type: application/json
 
 {
-"username": "admin",
+"mail": "admin@example.com",
 "name": "Admin User",
 "password": "adminpass",
 "role": "admin"

@@ -18,8 +18,7 @@ function sanitizeCarInput(req:any, res:any, next:any) {
     model: req.body.model,
     year: req.body.year,
     color: req.body.color,
-    price: req.body.price,
-    available: req.body.available
+    price: req.body.price
   }
 
   Object.keys(req.body.sanitizedInput).forEach((key) => {

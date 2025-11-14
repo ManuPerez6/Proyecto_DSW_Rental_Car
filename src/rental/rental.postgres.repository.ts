@@ -132,10 +132,6 @@ export class RentalPostgresRepository implements RentalRepository {
                 return undefined;
             }
 
-            if (process.env.DEBUG_RENTAL_AVAIL !== '0') {
-                console.log('addRental debug', { userId: rental.user.id, carId: rental.car.id, startDate: rental.startDate, endDate: rental.endDate, rawPrice, roundedPrice });
-            }
-
             await pool.query('BEGIN');
             try {
                 const res = await pool.query(
@@ -194,10 +190,9 @@ export class RentalPostgresRepository implements RentalRepository {
             if ('status' in updates) {
                 delete (updates as any).status;
             }
-            // Disallow user-updatable derived/internal fields
+
             if ('available' in updates) delete (updates as any).available;
 
-            // Map nested user/car objects to userId/carId if provided
             const working: Record<string, any> = {};
             for (const [k, v] of Object.entries(updates as Record<string, any>)) {
                 if (k === 'user' && v && typeof v === 'object' && 'id' in v) {
@@ -208,7 +203,7 @@ export class RentalPostgresRepository implements RentalRepository {
                     working['carId'] = v.id;
                     continue;
                 }
-                // accept direct userId/carId too
+
                 if (k === 'userId' || k === 'carId' || k === 'startDate' || k === 'endDate' || k === 'price') {
                     working[k] = v;
                 }

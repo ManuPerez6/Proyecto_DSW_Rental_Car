@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-// Tipado explícito del payload esperado en el token
 type JwtUser = {
   id: string;
   role: string;
-  username: string;
+  mail: string;
 };
 
 declare module 'express' {
@@ -15,7 +14,6 @@ declare module 'express' {
 }
 
 
-// Handler de errores 
 export const errorHandler = (err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
 
@@ -24,7 +22,7 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   } else if (err.name === 'ValidationError') {
     res.status(400).json({ error: err.message });
   } else if (err.name === 'MongoServerError' && err.message.includes('E11000 duplicate key error')) {
-    res.status(400).json({ error: 'Nombre de usuario inválido' });
+    res.status(400).json({ error: 'No es posible registrar el usuario con ese correo electrónico' });
   } else if (err.name === 'JsonWebTokenError') {
     res.status(401).json({ error: 'Token inválido' });
   } else if (err.name === 'TokenExpiredError') {
@@ -34,7 +32,6 @@ export const errorHandler = (err: any, _req: Request, res: Response, _next: Next
   }
 };
 
-// Extrae el usuario del token
 export const userExtractor = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.get('authorization');
   if (!authHeader || !authHeader.toLowerCase().startsWith('bearer ')) {
@@ -44,7 +41,6 @@ export const userExtractor = (req: Request, res: Response, next: NextFunction) =
 
   const token = authHeader.substring(7);
   try {
-    // Usar la misma clave por defecto que en el login (fallback 'secret')
     if (!process.env.SECRET) {
       res.status(500).json({ error: 'Configuración del servidor incompleta: SECRET no definido en el .env' });
       return;
@@ -64,7 +60,6 @@ export const userExtractor = (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-// Middleware para verificar si el usuario es Administrador
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (!req.user || req.user.role !== 'admin') {
     res.status(403).json({ error: 'Acceso denegado. Requiere permisos de administrador.' });
