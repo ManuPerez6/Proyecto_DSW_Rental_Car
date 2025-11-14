@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CommonModule, AsyncPipe } from '@angular/common'; 
-import { AuthService } from './shared/auth.service'; 
+import { AuthService } from './shared/services/auth.service'; 
 import { Observable } from 'rxjs';
-import { User } from './shared/user';
+import { User } from './shared/entities/user';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
