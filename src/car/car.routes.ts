@@ -6,10 +6,10 @@ const carController = new CarController();
 
 carRouter.get('/', carController.findAllCars);
 carRouter.get('/:id', carController.findCarById);
-carRouter.post('/', sanitizeCarInput, carController.addCar);
-carRouter.put('/:id', sanitizeCarInput, carController.updateCar);
-carRouter.patch('/:id', sanitizeCarInput, carController.partialUpdateCar);
-carRouter.delete('/:id', carController.deleteCar);
+carRouter.post('/new', sanitizeCarInput, carController.addCar);
+carRouter.put('/edit/:id', sanitizeCarInput, carController.updateCar);
+carRouter.patch('/patch/:id', sanitizeCarInput, carController.partialUpdateCar);
+carRouter.delete('/delete/:id', carController.deleteCar);
 
 function sanitizeCarInput(req:any, res:any, next:any) {
 

@@ -68,7 +68,6 @@ export class CarPostgresRepository implements CarRepository {
                 [car.brand, car.model, car.year, car.color, car.price, car.available, car.imageUrl]
             );
             const row = res.rows[0];
-            // Devolvemos una nueva instancia de Car con los datos de la DB
             return new Car(
                 row.id,
                 row.brand,

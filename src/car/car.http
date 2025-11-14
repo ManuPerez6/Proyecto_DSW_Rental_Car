@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/cars
 
 ### obtener un car
-GET http://localhost:3000/api/cars/2
+GET http://localhost:3000/api/cars/4
 
 ### crear un nuevo car
 POST http://localhost:3000/api/cars
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 
 ### modificar un car (PATCH - recurso parcial)
-PATCH http://localhost:3000/api/cars/2
+PATCH http://localhost:3000/api/cars/patch/4
 Content-Type: application/json
 
 {
@@ -41,4 +41,4 @@ Content-Type: application/json
 }
 
 ### borrar un car
-DELETE http://localhost:3000/api/cars/1
+DELETE http://localhost:3000/api/cars/delete/4

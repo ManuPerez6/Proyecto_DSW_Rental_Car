@@ -24,7 +24,7 @@ router.get('/:id', userExtractor, (req: Request, res: Response, next: NextFuncti
 });
 
 // Eliminar usuario por id (Lógica de seguridad en el controlador)
-router.delete('/:id', userExtractor, async (req: Request, res: Response, next: NextFunction) => {
+router.delete('/delete/:id', userExtractor, async (req: Request, res: Response, next: NextFunction) => {
   deleteUser(req,res).catch(next);
 });
 

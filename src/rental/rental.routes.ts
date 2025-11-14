@@ -6,10 +6,10 @@ const rentalController = new RentalController();
 
 rentalRouter.get('/', rentalController.findAllRentals);
 rentalRouter.get('/:id', rentalController.findRentalById);
-rentalRouter.post('/', sanitizeRentalInput, rentalController.addRental);
-rentalRouter.put('/:id', sanitizeRentalInput, rentalController.updateRental);
-rentalRouter.patch('/:id', sanitizeRentalInput, rentalController.partiallyUpdateRental);
-rentalRouter.delete('/:id', rentalController.deleteRental);
+rentalRouter.post('/new', sanitizeRentalInput, rentalController.addRental);
+rentalRouter.put('/edit/:id', sanitizeRentalInput, rentalController.updateRental);
+rentalRouter.patch('/patch/:id', sanitizeRentalInput, rentalController.partiallyUpdateRental);
+rentalRouter.delete('/delete/:id', rentalController.deleteRental);
 
 function sanitizeRentalInput(req:any, _res:any, next:any) {
   req.body.sanitizedInput = {

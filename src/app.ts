@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import carRoutes from './car/car.routes.js'
 import userRoutes from './user/user.routes.js';
 import rentalRoutes from './rental/rental.routes.js';
@@ -12,25 +13,32 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  optionsSuccessStatus: 200 
+};
+
 async function startServer() {
   // 1. Conectar a MongoDB y esperar a que esté lista
   await connectDB();
 
-  // 2. Usar middlewares
+  // 2. USAR MIDDLEWARES (CORS debe ir antes de las rutas)
+  app.use(cors(corsOptions)); 
   app.use(httpLogger);
   app.use(express.json());
 
-  // 3. Montar rutas
+  // 4. Montar rutas
   app.use('/api/users', userRoutes);
   app.use('/api/cars', carRoutes);
   app.use('/api/rentals', rentalRoutes);
 
-  // 4. Manejo de errores global
+  // 5. Manejo de errores global
   app.use(errorHandler);
 
-  // 5. Iniciar el servidor
+  // 6. Iniciar el servidor
   app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    // Usamos .info() ya que httpLogger es una instancia de pino-http
+    httpLogger.logger.info(`Servidor corriendo en http://localhost:${PORT}`);
   });
 }
 
