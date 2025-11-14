@@ -7,7 +7,8 @@ export class Car {
         public year: number,
         public color: string,
         public price: number,
-        public available: boolean
+        public available: boolean,
+        public imageUrl?: string
     ) {}
 
     toJSON() {

@@ -38,11 +38,12 @@ export class CarPostgresRepository implements CarRepository {
             row.year,
             row.color,
             normalizePrice(row.price),
-            row.available
+            row.available,
+            row.imageUrl
         ));
     }
 
-    async findOne(id: number): Promise<Car | undefined> { // CAMBIADO
+    async findOne(id: number): Promise<Car | undefined> {
         const res = await pool.query('SELECT * FROM cars WHERE id = $1', [id]);
         if (res.rows.length === 0) {
             return undefined;
@@ -55,15 +56,16 @@ export class CarPostgresRepository implements CarRepository {
             row.year,
             row.color,
             normalizePrice(row.price),
-            row.available
+            row.available,
+            row.imageUrl
         );
     }
 
     async add(car: Car): Promise<Car | undefined> {
         try {
             const res = await pool.query(
-                'INSERT INTO cars (brand, model, year, color, price, available) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [car.brand, car.model, car.year, car.color, car.price, car.available]
+                'INSERT INTO cars (brand, model, year, color, price, available, "imageUrl") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+                [car.brand, car.model, car.year, car.color, car.price, car.available, car.imageUrl]
             );
             const row = res.rows[0];
             // Devolvemos una nueva instancia de Car con los datos de la DB
@@ -74,7 +76,8 @@ export class CarPostgresRepository implements CarRepository {
                 row.year,
                 row.color,
                 normalizePrice(row.price),
-                row.available
+                row.available,
+                row.imageUrl
             );
         } catch (error) {
             console.error('Error adding car:', error);
@@ -85,8 +88,8 @@ export class CarPostgresRepository implements CarRepository {
     async update(id: number, car: Car): Promise<Car | undefined> {
         try {
             const res = await pool.query(
-                'UPDATE cars SET brand = $1, model = $2, year = $3, color = $4, price = $5, available = $6 WHERE id = $7 RETURNING *',
-                [car.brand, car.model, car.year, car.color, car.price, car.available, id]
+                'UPDATE cars SET brand = $1, model = $2, year = $3, color = $4, price = $5, available = $6, "imageUrl" = $7 WHERE id = $8 RETURNING *',
+                [car.brand, car.model, car.year, car.color, car.price, car.available, car.imageUrl, id]
             );
             if (res.rows.length === 0) return undefined;
             const row = res.rows[0];
@@ -97,7 +100,8 @@ export class CarPostgresRepository implements CarRepository {
                 row.year,
                 row.color,
                 normalizePrice(row.price),
-                row.available
+                row.available,
+                row.imageUrl
             );
         } catch (error) {
             console.error('Error updating car:', error);
@@ -122,7 +126,8 @@ export class CarPostgresRepository implements CarRepository {
                 row.year,
                 row.color,
                 normalizePrice(row.price),
-                row.available
+                row.available,
+                row.imageUrl
             );
         } catch (error) {
             console.error('Error partially updating car:', error);
@@ -142,7 +147,8 @@ export class CarPostgresRepository implements CarRepository {
                 row.year,
                 row.color,
                 normalizePrice(row.price),
-                row.available
+                row.available,
+                row.imageUrl
             );
         } catch (error) {
             console.error('Error deleting car:', error);

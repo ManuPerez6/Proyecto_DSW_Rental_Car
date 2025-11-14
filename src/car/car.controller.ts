@@ -50,7 +50,8 @@ export class CarController {
                 input.year,
                 input.color,
                 input.price,
-                true
+                true,
+                input.imageUrl
             );
 
             const savedCar = await carRepository.add(newCar);
@@ -87,7 +88,8 @@ export class CarController {
                 input.year,
                 input.color,
                 input.price,
-                existingCar.available
+                existingCar.available,
+                input.imageUrl
             );
 
             const returnedCar = await carRepository.update(carId, updatedCar);
