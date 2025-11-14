@@ -5,7 +5,7 @@ GET http://localhost:3000/api/cars
 GET http://localhost:3000/api/cars/4
 
 ### crear un nuevo car
-POST http://localhost:3000/api/cars
+POST http://localhost:3000/api/cars/new
 Content-Type: application/json
 
 {
@@ -13,8 +13,7 @@ Content-Type: application/json
   "model": "Corolla",
   "year": 2022,
   "color": "Blue",
-  "price": 450,
-  "available": true
+  "price": 450
 }
 
 ### modificar un car (PUT - recurso completo e idempotente)

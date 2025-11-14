@@ -42,7 +42,8 @@ export class CarController {
 
     async addCar(req: Request, res: Response) {
         try {
-            const input = req.body;
+            const input = req.body.sanitizedInput; 
+            
             const newCar = new Car(
                 undefined,
                 input.brand,
@@ -79,7 +80,7 @@ export class CarController {
                 return;
             }
 
-            const input = req.body;
+            const input = req.body.sanitizedInput; 
 
             const updatedCar = new Car(
                 carId,
@@ -88,7 +89,7 @@ export class CarController {
                 input.year,
                 input.color,
                 input.price,
-                existingCar.available,
+                existingCar.available, 
                 input.imageUrl
             );
 
