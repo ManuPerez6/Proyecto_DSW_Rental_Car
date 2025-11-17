@@ -15,13 +15,23 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   
   { path: 'car', component: CarListComponent },
-  { path: 'car/detail/:id', component: CarDetailComponent, canActivate: [authGuard] },
-
+  { path: 'car/detail/:id', 
+    component: CarDetailComponent, 
+    canActivate: [authGuard] },
   { 
     path: 'car/new', 
     component: CarFormComponent,
     canActivate: [adminGuard]
   },
+
+  // Ruta para editar un auto: ejemplo /car/5/edit
+  {
+    path: 'car/:id/edit',
+    component: CarFormComponent,
+    canActivate: [adminGuard]
+  },
+  { path: 'rentals', loadComponent: () => import('./components/rental-list/rental-list.component').then(m => m.RentalListComponent) },
+  { path: 'rentals/:id/edit', loadComponent: () => import('./components/rental-edit/rental-edit.component').then(m => m.RentalEditComponent), canActivate: [adminGuard] },
   
   { path: '**', redirectTo: '' }
 ];

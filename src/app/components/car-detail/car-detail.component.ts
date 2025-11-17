@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CarService } from '../../shared/services/car.service';
 import { Car } from '../../shared/entities/car';
 import { Observable, Subscription } from 'rxjs';
+import { DateAdapter } from '@angular/material/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { RentalService } from '../../shared/services/rental.service';
 
@@ -19,7 +20,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 @Component({
@@ -42,6 +43,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule
   ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+  ],
   templateUrl: './car-detail.component.html',
   styleUrls: ['./car-detail.component.css']
 })
@@ -66,16 +70,24 @@ export class CarDetailComponent implements OnInit, OnDestroy {
   private rentalService = inject(RentalService);
   private snackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private dateAdapter = inject(DateAdapter);
 
-  constructor() {
-    this.isLoggedIn$ = this.authService.isLoggedIn$;
-    this.minDate = new Date(); 
+  constructor() {
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.minDate = new Date(); 
 
-    this.rentalForm = this.fb.group({
-      startDate: [new Date(), Validators.required],
-      endDate: ['', Validators.required]
-    });
-  }
+    // Force locale on DateAdapter so Material datepicker shows DD/MM/YYYY
+    try {
+      this.dateAdapter.setLocale('es-ES');
+    } catch (e) {
+      console.warn('No se pudo setear locale en DateAdapter', e);
+    }
+
+    this.rentalForm = this.fb.group({
+      startDate: [new Date(), Validators.required],
+      endDate: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');

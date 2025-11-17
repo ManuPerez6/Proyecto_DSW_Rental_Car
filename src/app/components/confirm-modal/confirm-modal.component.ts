@@ -25,10 +25,23 @@ export class ConfirmModalComponent {
 
 
   @Output() confirm = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
+
+  isOpen = false;
 
   constructor() { }
 
   onConfirmClick(): void {
     this.confirm.emit();
+    this.closeModal();
+  }
+
+  open(): void {
+    this.isOpen = true;
+  }
+
+  closeModal(): void {
+    this.isOpen = false;
+    this.close.emit();
   }
 }

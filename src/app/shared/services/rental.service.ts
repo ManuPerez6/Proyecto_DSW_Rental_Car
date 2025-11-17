@@ -13,8 +13,11 @@ export class RentalService {
 
   constructor() { }
 
+  // Add a cache-busting query param to avoid 304 Not Modified responses from
+  // intermediaries when we need fresh data in the UI.
   getRentals(): Observable<Rental[]> {
-    return this.http.get<Rental[]>(this.apiUrl);
+    const url = `${this.apiUrl}?_=${Date.now()}`;
+    return this.http.get<Rental[]>(url);
   }
 
   getRentalById(id: number): Observable<Rental> {
@@ -23,6 +26,10 @@ export class RentalService {
 
   updateRental(id: number, rental: Rental): Observable<Rental> {
     return this.http.put<Rental>(`${this.apiUrl}/edit/${id}`, rental);
+  }
+
+  patchRental(id: number, rentalData: Partial<Rental>): Observable<Rental> {
+    return this.http.patch<Rental>(`${this.apiUrl}/patch/${id}`, rentalData);
   }
 
   addRental(rentalData: { userId: string; carId: number; startDate: string; endDate: string }): Observable<Rental> {

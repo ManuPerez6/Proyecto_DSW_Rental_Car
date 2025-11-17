@@ -1,8 +1,12 @@
 
 .detail-image {
+  display: block;
   width: 100%;
-  max-height: 400px;
-  object-fit: cover;
+  max-width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  object-position: center;
   background-color: #f5f5f5;
   margin-bottom: 16px;
 }

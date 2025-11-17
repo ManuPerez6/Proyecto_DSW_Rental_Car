@@ -57,7 +57,7 @@
       </mat-card-content>
       
       <mat-card-actions>
-        <button mat-button color="primary" [routerLink]="['/car', car.id]">
+        <button mat-button color="primary" [routerLink]="['/car/detail', car.id]">
           <mat-icon>visibility</mat-icon>
           {{ car.available ? 'Ver y Alquilar' : 'Ver Detalles' }}
         </button>
@@ -67,11 +67,8 @@
           <button mat-icon-button color="primary" [routerLink]="['/car', car.id, 'edit']" matTooltip="Editar">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button 
-                  (click)="prepareDelete(car)" 
-                  data-bs-toggle="modal" 
-                  data-bs-target="#deleteCarModal">
-              <mat-icon>delete</mat-icon>
+          <button mat-icon-button (click)="openDeleteModal(car)">
+            <mat-icon>delete</mat-icon>
           </button>
         </ng-container>
 
@@ -80,12 +77,14 @@
 
   </div>
 
-  <app-confirm-modal 
-  id="deleteCarModal" 
-  title="Confirmar Eliminación"
-  [body]="'¿Estás seguro de que quieres eliminar el auto ' + (carToDelete?.brand || '') + ' ' + (carToDelete?.model || '') + '?'"
-  confirmButtonText="Sí, Eliminar"
-  confirmButtonClass="btn-danger"
-  (confirm)="confirmDelete()">
+  <app-confirm-modal
+    #confirmModal
+    id="deleteCarModal"
+    title="Confirmar Eliminación"
+    [body]="'¿Estás seguro de que quieres eliminar el auto ' + (carToDelete?.brand || '') + ' ' + (carToDelete?.model || '') + '?'"
+    confirmButtonText="Sí, Eliminar"
+    confirmButtonClass="btn-danger"
+    (confirm)="confirmDelete()"
+    (close)="onModalClose()">
   </app-confirm-modal>
 </div>

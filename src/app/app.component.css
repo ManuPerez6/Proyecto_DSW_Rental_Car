@@ -50,6 +50,22 @@ mat-toolbar {
   background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil al pasar el ratón */
 }
 
+/* Mis Alquileres button: estilo blanco para que combine con la barra */
+.rentals-button {
+  color: #fff;
+  font-weight: 400;
+  margin-right: 12px;
+  text-transform: none;
+}
+.rentals-button mat-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #fff;
+}
+.rentals-button:hover {
+  background-color: rgba(255,255,255,0.08);
+}
+
 /* Contenedor principal de la página (para centrar) */
 .main-page-container {
   max-width: 1200px;

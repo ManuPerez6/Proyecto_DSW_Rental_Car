@@ -22,6 +22,10 @@
       </ng-container>
 
       <ng-container *ngIf="currentUser$ | async as user">
+        <button mat-button class="rentals-button" routerLink="/rentals" *ngIf="user">
+          <mat-icon>list_alt</mat-icon>
+          Mis Alquileres
+        </button>
         <span class="welcome-message">
           Hola, {{ user.name }} ({{ user.role }})
         </span>

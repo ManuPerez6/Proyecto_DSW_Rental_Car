@@ -31,7 +31,7 @@
         </div>
         <div class="stat-item">
           <span class="stat-label">Precio / día: </span>
-          <span class="stat-value">{{ car.price | currency:'USD':'symbol':'1.0-0' }}</span>
+          <span class="stat-value">{{ car.price | currency:'ARS':'ARS$':'1.0-0' }}</span>
         </div>
          <div class="stat-item">
           <span class="stat-label">Disponibilidad: </span>
@@ -63,7 +63,7 @@
 
         <div *ngIf="calculatedPrice && calculatedPrice > 0" class="price-summary">
           <h4>Precio Total Estimado:</h4>
-          <span class="total-price">{{ calculatedPrice | currency:'USD':'symbol':'1.0-0' }}</span>
+          <span class="total-price">{{ calculatedPrice | currency:'ARS':'ARS$':'1.0-0' }}</span>
         </div>
 
         <button mat-raised-button color="accent" 

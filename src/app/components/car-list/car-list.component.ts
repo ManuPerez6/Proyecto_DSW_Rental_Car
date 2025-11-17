@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ViewChild } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -56,6 +56,7 @@ export class CarListComponent implements OnInit, OnDestroy {
   private filterSub!: Subscription;
 
   carToDelete: Car | null = null;
+  @ViewChild('confirmModal') confirmModal!: ConfirmModalComponent;
 
   private carService = inject(CarService);
   private authService = inject(AuthService);
@@ -125,6 +126,19 @@ export class CarListComponent implements OnInit, OnDestroy {
 
   prepareDelete(car: Car): void {
     this.carToDelete = car;
+  }
+
+  openDeleteModal(car: Car): void {
+    this.carToDelete = car;
+    try {
+      this.confirmModal.open();
+    } catch (e) {
+      console.warn('No se pudo abrir el modal programáticamente', e);
+    }
+  }
+
+  onModalClose(): void {
+    this.carToDelete = null;
   }
 
   confirmDelete(): void {

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, LOCALE_ID } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { CommonModule, AsyncPipe } from '@angular/common'; 
+import { CommonModule, AsyncPipe, registerLocaleData } from '@angular/common'; 
+import localeEs from '@angular/common/locales/es';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AuthService } from './shared/services/auth.service'; 
 import { Observable } from 'rxjs';
 import { User } from './shared/entities/user';
@@ -33,6 +35,7 @@ export class AppComponent {
 
   constructor(private authService: AuthService, private router: Router) {
     this.currentUser$ = this.authService.currentUser$; 
+    try { registerLocaleData(localeEs); } catch (e) { /* ignore if already registered */ }
   }
 
   logout(): void {
