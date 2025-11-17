@@ -13,7 +13,8 @@ Content-Type: application/json
   "model": "Corolla",
   "year": 2022,
   "color": "Blue",
-  "price": 450
+  "price": 450,
+  "imageUrl": "https://www.pngitem.com/pimgs/m/638-6380605_toyota-corolla-car-png-transparent-png.png"
 }
 
 ### modificar un car (PUT - recurso completo e idempotente)

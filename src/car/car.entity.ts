@@ -19,7 +19,8 @@ export class Car {
             year: this.year,
             color: this.color,
             price: Math.round((this.price ?? 0) * 100) / 100,
-            available: this.available
+            available: this.available,
+            imageUrl: this.imageUrl
         };
     }
 
