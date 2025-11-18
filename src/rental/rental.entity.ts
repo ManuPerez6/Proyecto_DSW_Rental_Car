@@ -1,6 +1,6 @@
 import { Car } from "../car/car.entity.js";
 import { IUser } from "../user/user.entity.js";
-import { formatDisplayDate } from "../utils/date.utils.js";
+import { formatDateToSQL } from "../utils/date.utils.js";
 
 export function calculateDays(startDate: Date, endDate: Date): number {
     const start = new Date(startDate);
@@ -45,8 +45,10 @@ export class Rental {
             id: this.id,
             user: this.user,
             car: this.car,
-            startDate: formatDisplayDate(this.startDate),
-            endDate: formatDisplayDate(this.endDate),
+            // send dates in unified ISO-like YYYY-MM-DD format to the frontend;
+            // the frontend will format for display (dd/MM/yyyy)
+            startDate: formatDateToSQL(this.startDate),
+            endDate: formatDateToSQL(this.endDate),
             price: Math.round(this.price * 100) / 100,
         };
     }
