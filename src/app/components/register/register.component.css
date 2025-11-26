@@ -1,80 +1,29 @@
-/* Contenedor general */
-.container {
-  max-width: 450px;
-}
-
-/* Reduce el margen superior del contenedor sólo en este componente */
-.container.mt-3 {
-  margin-top: 12px !important;
-}
-
-/* Tarjeta visual del formulario */
-.form-card {
-  background: #ffffff;
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-/* Título */
-.form-title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-/* Inputs */
-form input {
-  border-radius: 8px !important;
-  padding: 6px 8px !important;
-  border: 1px solid #ced4da;
-  transition: all 0.2s ease-in-out;
-}
-
-form input:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 4px rgba(13, 110, 253, 0.4);
-}
-
-/* Botón */
-.btn-submit {
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: background 0.2s ease-in-out;
-}
-
-.btn-submit:hover {
-  background-color: #0b5ed7;
-}
-
-/* Animación */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Compactar espacios entre campos: reducir margen de .mb-3 dentro de la tarjeta */
-.form-card .mb-3 {
-  margin-bottom: 8px !important;
-}
-
-/* Mensajes de error: mostrarlos inline y sin tanto margen vertical */
-.form-card .text-danger {
-  margin-top: 4px !important;
-  font-size: 0.82rem;
+.register-container {
   display: flex;
-  gap: 8px;
+  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-}
-.form-card .text-danger span {
-  display: inline-block;
+  padding: 1rem 0.5rem;
 }
 
-/* Si se usan utilidades como mt-1 en mensajes, reducir su efecto aquí */
-.form-card .mt-1 {
-  margin-top: 4px !important;
+.register-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 1rem 1.5rem;
+  text-align: left;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #dee2e6;
+}
+
+.register-form-wrapper form{
+  padding: 0 !important;
+}
+
+.register-info p{
+  margin: 0;
+}
+
+.form-label {
+  font-weight: 500;  
 }

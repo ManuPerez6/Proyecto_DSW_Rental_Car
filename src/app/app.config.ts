@@ -3,15 +3,18 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './auth/auth.interceptor';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs, 'es-ES');
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([
-      authInterceptor
-    ])),
-    { provide: LOCALE_ID, useValue: 'es-ES' },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'es-ES' }
   ]
 };

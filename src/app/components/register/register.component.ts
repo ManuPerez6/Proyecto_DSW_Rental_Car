@@ -33,7 +33,7 @@ export class RegisterComponent {
   loading = false;
   error: string | null = null;
 
-  // Inyección de dependencias moderna
+  // Inyección de dependencias
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);

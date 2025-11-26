@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { DateAdapter } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-rental-edit',
@@ -32,6 +33,7 @@ import { DateAdapter } from '@angular/material/core';
   templateUrl: './rental-edit.component.html',
   styleUrls: ['./rental-edit.component.css']
 })
+
 export class RentalEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private rentalService = inject(RentalService);
@@ -64,10 +66,12 @@ export class RentalEditComponent implements OnInit {
     this.rentalService.getRentalById(id).subscribe({
       next: (r) => {
         this.rental = r;
+        const startDateObj = r.startDate ? new Date(r.startDate) : null;
+        const endDateObj = r.endDate ? new Date(r.endDate) : null;
         this.form.patchValue({
-          startDate: r.startDate ? new Date(r.startDate) : null,
-          endDate: r.endDate ? new Date(r.endDate) : null
-        } as any);
+            startDate: startDateObj, 
+            endDate: endDateObj,     
+        });
         this.loading = false;
       },
       error: (err) => {
