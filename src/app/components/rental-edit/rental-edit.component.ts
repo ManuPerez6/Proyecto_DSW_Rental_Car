@@ -6,13 +6,11 @@ import { RentalService } from '../../shared/services/rental.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { DateAdapter } from '@angular/material/core';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-rental-edit',
@@ -30,10 +28,12 @@ import { DatePipe } from '@angular/common';
     MatCardModule,
     MatSnackBarModule
   ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }
+  ],
   templateUrl: './rental-edit.component.html',
   styleUrls: ['./rental-edit.component.css']
 })
-
 export class RentalEditComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private rentalService = inject(RentalService);
@@ -41,16 +41,19 @@ export class RentalEditComponent implements OnInit {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private dateAdapter = inject(DateAdapter);
+
   rentalId: number | null = null;
   rental: any = null;
   loading = true;
+  
   form = this.fb.group({
     startDate: [null as Date | null, Validators.required],
     endDate: [null as Date | null, Validators.required]
   });
 
   ngOnInit(): void {
-    try { this.dateAdapter.setLocale('es-ES'); } catch (e) { /* ignore if not available */ }
+    this.dateAdapter.setLocale('es-ES');
+
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       const nid = Number(idParam);
@@ -66,8 +69,10 @@ export class RentalEditComponent implements OnInit {
     this.rentalService.getRentalById(id).subscribe({
       next: (r) => {
         this.rental = r;
-        const startDateObj = r.startDate ? new Date(r.startDate) : null;
-        const endDateObj = r.endDate ? new Date(r.endDate) : null;
+        
+        const startDateObj = this.parseDateFromBackend(r.startDate);
+        const endDateObj = this.parseDateFromBackend(r.endDate);
+
         this.form.patchValue({
             startDate: startDateObj, 
             endDate: endDateObj,     
@@ -82,13 +87,40 @@ export class RentalEditComponent implements OnInit {
     });
   }
 
+  private parseDateFromBackend(dateStr: string | Date | undefined): Date | null {
+    if (!dateStr) return null;
+    if (dateStr instanceof Date) return dateStr;
+
+    const s = String(dateStr).split('T')[0];
+    const [year, month, day] = s.split('-').map(num => parseInt(num, 10));
+    
+    return new Date(year, month - 1, day);
+  }
+
+  private formatDateToBackend(d: any): string {
+    if (!d) return '';
+    const date = (d instanceof Date) ? d : new Date(d);
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
+
   save(): void {
     if (this.form.invalid || this.rentalId === null) return;
+    
     const data = {
       ...this.rental,
-      startDate: this.formatDate(this.form.value.startDate),
-      endDate: this.formatDate(this.form.value.endDate)
+      startDate: this.formatDateToBackend(this.form.value.startDate),
+      endDate: this.formatDateToBackend(this.form.value.endDate)
     };
+
+    delete data.id;
+    delete data.user; 
+    delete data.car;
+
     this.rentalService.patchRental(this.rentalId, data).subscribe({
       next: (res) => {
         this.snackBar.open('Alquiler actualizado', 'Cerrar', { duration: 2000 });
@@ -96,14 +128,9 @@ export class RentalEditComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        this.snackBar.open('Error al actualizar', 'Cerrar', { duration: 3000 });
+        const msg = err.error?.errorMessage || err.error?.error || 'Error al actualizar';
+        this.snackBar.open(msg, 'Cerrar', { duration: 3000 });
       }
     });
-  }
-
-  private formatDate(d: any): string {
-    if (!d) return '';
-    const date = (d instanceof Date) ? d : new Date(d);
-    return date.toISOString().split('T')[0];
   }
 }

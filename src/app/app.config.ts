@@ -13,8 +13,10 @@ registerLocaleData(localeEs, 'es-ES');
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([
+      authInterceptor
+    ])),
     provideAnimationsAsync(),
-    { provide: LOCALE_ID, useValue: 'es-ES' }
+    { provide: LOCALE_ID, useValue: 'es-ES' } 
   ]
 };
