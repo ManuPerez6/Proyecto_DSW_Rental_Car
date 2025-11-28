@@ -93,9 +93,6 @@ export class RentalListComponent implements OnInit {
           };
         });
 
-        console.debug('rentals raw:', all);
-        console.debug('rentals normalized:', normalized);
-
         if (this.authService.isAdmin()) {
           this.rentals = normalized;
         } else {

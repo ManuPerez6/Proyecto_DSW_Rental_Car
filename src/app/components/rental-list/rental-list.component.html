@@ -34,7 +34,7 @@
         <button *ngIf="(isAdmin$ | async)" mat-icon-button [routerLink]="['/rentals', r.id, 'edit']" matTooltip="Editar">
           <mat-icon>edit</mat-icon>
         </button>
-        <button *ngIf="(isAdmin$ | async)" mat-icon-button (click)="openDeleteModal(r)">
+        <button *ngIf="(isAdmin$ | async)" mat-icon-button (click)="openDeleteModal(r)" matTooltip="Eliminar">
           <mat-icon>delete</mat-icon>
         </button>
       </mat-card-actions>
