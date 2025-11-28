@@ -22,7 +22,18 @@ const carController = new CarController();
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Car'
+ *                 type: object
+ *                 properties:
+ *                   brand:
+ *                     type: string
+ *                   model:
+ *                     type: string
+ *                   year:
+ *                     type: integer
+ *                   color:
+ *                     type: string
+ *                   price:
+ *                     type: number
  */
 carRouter.get('/', carController.findAllCars);
 /**
@@ -43,7 +54,20 @@ carRouter.get('/', carController.findAllCars);
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Car'
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   brand:
+ *                     type: string
+ *                   model:
+ *                     type: string
+ *                   year:
+ *                     type: integer
+ *                   color:
+ *                     type: string
+ *                   price:
+ *                     type: number
  */
 carRouter.get('/:id', carController.findCarById);
 /**
@@ -60,7 +84,24 @@ carRouter.get('/:id', carController.findCarById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Car'
+ *             type: object
+ *             required:
+ *               - brand
+ *               - model
+ *               - year
+ *               - color
+ *               - price
+ *             properties:
+ *               brand:
+ *                 type: string
+ *               model:
+ *                 type: string
+ *               year:
+ *                 type: integer
+ *               color:
+ *                 type: string
+ *               price:
+ *                 type: number
  *     responses:
  *       '201':
  *         description: Creado
@@ -86,12 +127,65 @@ carRouter.post('/new', sanitizeCarInput, carController.addCar);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Car'
+ *             type: object
+ *             required:
+ *               - brand
+ *               - model
+ *               - year
+ *               - color
+ *               - price
+ *             properties:
+ *               brand:
+ *                 type: string
+ *               model:  
+ *                 type: string
+ *               year:
+ *                 type: integer
+ *               color:
+ *                 type: string
+ *               price:
+ *                 type: number
  *     responses:
  *       '200':
  *         description: Actualizado
  */
 carRouter.put('/edit/:id', sanitizeCarInput, carController.updateCar);
+/**
+ * @swagger
+ * /cars/patch/{id}:
+ *   patch:
+ *     summary: Editar vehículo parcialmente (Admin)
+ *     tags:
+ *       - Cars
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               brand:
+ *                 type: string
+ *               model:
+ *                 type: string
+ *               year:
+ *                 type: integer
+ *               color:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *     responses:
+ *       '200':
+ *         description: Actualizado
+ */
 carRouter.patch('/patch/:id', sanitizeCarInput, carController.partialUpdateCar);
 /**
  * @swagger
