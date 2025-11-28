@@ -53,7 +53,7 @@
       </mat-card-header>
       
       <mat-card-content>
-        <p class="car-price">{{ car.price | currency:'USD':'symbol':'1.0-0' }} / día</p>
+        <p class="car-price">{{ car.price | currency:'ARS':'ARS$':'1.0-0' }} / día</p>
       </mat-card-content>
       
       <mat-card-actions>
@@ -67,7 +67,7 @@
           <button mat-icon-button color="primary" [routerLink]="['/car', car.id, 'edit']" matTooltip="Editar">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="openDeleteModal(car)">
+          <button mat-icon-button (click)="openDeleteModal(car)" matTooltip="Eliminar">
             <mat-icon>delete</mat-icon>
           </button>
         </ng-container>

@@ -68,18 +68,23 @@ export class RentalListComponent implements OnInit {
           const endRaw = r.endDate ?? r.end_date ?? r.end ?? null;
           const priceRaw = r.price ?? r.totalPrice ?? r.calculatedPrice ?? null;
 
-          // Convert to Date and validate
-          let startDate: Date | null = null;
-          if (startRaw) {
-            const d = new Date(startRaw);
-            startDate = isNaN(d.getTime()) ? null : d;
-          }
+          // backend provides YYYY-MM-DD -> parse as local date (avoid UTC parsing)
+          const parseYmdLocal = (v: any): Date | null => {
+            if (!v) return null;
+            if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+            const s = String(v).split('T')[0];
+            const parts = s.split('-').map(Number);
+            if (parts.length >= 3 && parts.every(n => !isNaN(n))) {
+              const [y, m, d] = parts;
+              const dt = new Date(y, m - 1, d);
+              return isNaN(dt.getTime()) ? null : dt;
+            }
+            const fallback = new Date(String(v));
+            return isNaN(fallback.getTime()) ? null : fallback;
+          };
 
-          let endDate: Date | null = null;
-          if (endRaw) {
-            const d2 = new Date(endRaw);
-            endDate = isNaN(d2.getTime()) ? null : d2;
-          }
+          const startDate = parseYmdLocal(startRaw);
+          const endDate = parseYmdLocal(endRaw);
 
           return {
             ...r,

@@ -122,7 +122,7 @@ export class RentalEditComponent implements OnInit {
     delete data.car;
 
     this.rentalService.patchRental(this.rentalId, data).subscribe({
-      next: (res) => {
+      next: (_res) => {
         this.snackBar.open('Alquiler actualizado', 'Cerrar', { duration: 2000 });
         this.router.navigate(['/rentals']);
       },
