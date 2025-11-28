@@ -1,5 +1,30 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID único del usuario (UUID o String)
+ *         name:
+ *           type: string
+ *         mail:
+ *           type: string
+ *           format: email
+ *         role:
+ *           type: string
+ *           enum: [user, admin]
+ *       example:
+ *         id: "507f1f77bcf86cd799439011"
+ *         name: "Juan Perez"
+ *         mail: "juan@example.com"
+ *         role: "user"
+ */
+
 export interface IUser extends Document {
   mail: string;
   name: string;

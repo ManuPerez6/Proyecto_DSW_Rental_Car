@@ -7,6 +7,8 @@ import rentalRoutes from './rental/rental.routes.js';
 import { errorHandler } from './user/auth.middleware.js';
 import { connectDB } from './user/user.db.js';
 import httpLogger from './middleware/logger/pino.logger.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
 
 dotenv.config();
 
@@ -35,9 +37,11 @@ async function startServer() {
   // 5. Manejo de errores global
   app.use(errorHandler);
 
-  // 6. Iniciar el servidor
+  // 6. Documentación Swagger
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+  // 7. Iniciar el servidor
   app.listen(PORT, () => {
-    // Usamos .info() ya que httpLogger es una instancia de pino-http
     httpLogger.logger.info(`Servidor corriendo en http://localhost:${PORT}`);
   });
 }

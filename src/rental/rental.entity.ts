@@ -2,6 +2,35 @@ import { Car } from "../car/car.entity.js";
 import { IUser } from "../user/user.entity.js";
 import { formatDateToSQL } from "../utils/date.utils.js";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Rental:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: ID del alquiler
+ *         user:
+ *           $ref: '#/components/schemas/User'
+ *         car:
+ *           $ref: '#/components/schemas/Car'
+ *         startDate:
+ *           type: string
+ *           format: date
+ *         endDate:
+ *           type: string
+ *           format: date
+ *         price:
+ *           type: number
+ *           description: Precio total calculado
+ *       example:
+ *         id: 1
+ *         startDate: "2023-10-01"
+ *         endDate: "2023-10-05"
+ *         price: 20000
+ */
 export function calculateDays(startDate: Date, endDate: Date): number {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -45,8 +74,6 @@ export class Rental {
             id: this.id,
             user: this.user,
             car: this.car,
-            // send dates in unified ISO-like YYYY-MM-DD format to the frontend;
-            // the frontend will format for display (dd/MM/yyyy)
             startDate: formatDateToSQL(this.startDate),
             endDate: formatDateToSQL(this.endDate),
             price: Math.round(this.price * 100) / 100,

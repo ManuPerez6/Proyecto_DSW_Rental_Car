@@ -1,14 +1,117 @@
 import { Router } from "express";
 import { CarController } from './car.controller.js';
-
+/**
+ * @swagger
+ * tags:
+ *   - name: Cars
+ *     description: Catálogo de vehículos
+ */
 const carRouter = Router();
 const carController = new CarController();
-
+/**
+ * @swagger
+ * /cars:
+ *   get:
+ *     summary: Obtener listado de autos
+ *     tags:
+ *       - Cars
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Car'
+ */
 carRouter.get('/', carController.findAllCars);
+/**
+ * @swagger
+ * /cars/{id}:
+ *   get:
+ *     summary: Obtener detalle de un auto
+ *     tags:
+ *       - Cars
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Car'
+ */
 carRouter.get('/:id', carController.findCarById);
+/**
+ * @swagger
+ * /cars/new:
+ *   post:
+ *     summary: Agregar vehículo (Admin)
+ *     tags:
+ *       - Cars
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Car'
+ *     responses:
+ *       '201':
+ *         description: Creado
+ */
 carRouter.post('/new', sanitizeCarInput, carController.addCar);
+/**
+ * @swagger
+ * /cars/edit/{id}:
+ *   put:
+ *     summary: Editar vehículo (Admin)
+ *     tags:
+ *       - Cars
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Car'
+ *     responses:
+ *       '200':
+ *         description: Actualizado
+ */
 carRouter.put('/edit/:id', sanitizeCarInput, carController.updateCar);
 carRouter.patch('/patch/:id', sanitizeCarInput, carController.partialUpdateCar);
+/**
+ * @swagger
+ * /cars/delete/{id}:
+ *   delete:
+ *     summary: Eliminar vehículo (Admin)
+ *     tags:
+ *       - Cars
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Eliminado
+ */
 carRouter.delete('/delete/:id', carController.deleteCar);
 
 function sanitizeCarInput(req:any, res:any, next:any) {
