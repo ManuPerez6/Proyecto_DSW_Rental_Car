@@ -1,59 +1,73 @@
-# CharactersFrontend
+# 🚗 Gestor de Alquiler de Vehículos (Frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.17.
+Bienvenido al repositorio del frontend para el sistema de gestión de alquiler de vehículos. Esta aplicación permite a los usuarios explorar una flota de autos, registrarse y realizar reservas, mientras ofrece a los administradores herramientas para gestionar el inventario y los alquileres.
 
-## Development server
+## 🛠️ Tecnologías Utilizadas
 
-To start a local development server, run:
+Este proyecto está construido con las últimas tecnologías web:
 
-```bash
-ng serve
-```
+* **Framework:** [Angular 19](https://angular.io/)
+* **Lenguaje:** TypeScript
+* **Diseño y UI:**
+    * [Angular Material](https://material.angular.io/) (Componentes visuales)
+    * [Bootstrap 5](https://getbootstrap.com/) (Sistema de grillas y utilidades)
+* **Gestión de Formularios:** Reactive Forms
+* **Cliente HTTP:** Angular HttpClient con Interceptores
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 📋 Funcionalidades
 
-## Code scaffolding
+### 👤 Usuarios Públicos y Registrados
+* **Inicio:** Landing page de bienvenida.
+* **Autenticación:** Login y Registro de nuevos usuarios.
+* **Catálogo:** Visualización de autos disponibles con filtros por texto y disponibilidad.
+* **Detalle:** Vista detallada del vehículo con fotos, características y cálculo de precio estimado.
+* **Mis Alquileres:** Historial de las reservas realizadas por el usuario.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 🛡️ Administradores
+* **Gestión de Autos:** Crear, Editar y Eliminar vehículos del inventario.
+* **Gestión de Alquileres:** Ver todos los alquileres del sistema, editar fechas o cancelar reservas.
+* **Protección de Rutas:** Guards específicos para asegurar que solo los administradores accedan a las funciones de gestión.
 
-```bash
-ng generate component component-name
-```
+## 🚀 Instalación y Ejecución
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Asegúrate de tener instalado [Node.js](https://nodejs.org/) (versión LTS recomendada) y [Angular CLI](https://github.com/angular/angular-cli).
 
-```bash
-ng generate --help
-```
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    cd proyecto-dsw-rental-car-frontend
+    ```
 
-## Building
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-To build the project run:
+3.  **Configurar entorno:**
+    Verifica el archivo `src/app/environments/environment.ts`. Por defecto, la aplicación espera que el backend corra en:
+    ```typescript
+    apiUrl: 'http://localhost:3000/api'
+    ```
 
-```bash
-ng build
-```
+4.  **Ejecutar servidor de desarrollo:**
+    ```bash
+    npm run start
+    ```
+    La aplicación se abrirá automáticamente en `http://localhost:4200/`.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 📂 Estructura del Proyecto
 
-## Running unit tests
+* `src/app/auth`: Guards e Interceptores para manejo de seguridad y tokens.
+* `src/app/components`: Componentes principales (Login, Registro, Listados, Formularios).
+* `src/app/shared`: Servicios (API calls) y Entidades (Modelos de datos).
+* `src/app/environments`: Variables de configuración.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## 🤝 Contribución
 
-```bash
-ng test
-```
+1.  Haz un Fork del proyecto.
+2.  Crea una rama para tu funcionalidad (`git checkout -b feature/nueva-funcionalidad`).
+3.  Haz Commit de tus cambios (`git commit -m 'Agrega nueva funcionalidad'`).
+4.  Haz Push a la rama (`git push origin feature/nueva-funcionalidad`).
+5.  Abre un Pull Request.
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
