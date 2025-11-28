@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
+import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CarListComponent } from './components/car-list/car-list.component';
@@ -24,7 +24,6 @@ export const routes: Routes = [
     canActivate: [adminGuard]
   },
 
-  // Ruta para editar un auto: ejemplo /car/5/edit
   {
     path: 'car/:id/edit',
     component: CarFormComponent,

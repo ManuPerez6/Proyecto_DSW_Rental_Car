@@ -68,7 +68,6 @@ export class RentalListComponent implements OnInit {
           const endRaw = r.endDate ?? r.end_date ?? r.end ?? null;
           const priceRaw = r.price ?? r.totalPrice ?? r.calculatedPrice ?? null;
 
-          // backend provides YYYY-MM-DD -> parse as local date (avoid UTC parsing)
           const parseYmdLocal = (v: any): Date | null => {
             if (!v) return null;
             if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
