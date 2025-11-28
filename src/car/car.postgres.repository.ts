@@ -159,10 +159,5 @@ export class CarPostgresRepository implements CarRepository {
 function normalizePrice(raw: any): number {
     const n = Number(raw);
     if (!isFinite(n) || isNaN(n)) return 0;
-    let value = n;
-    if (Math.abs(value) >= 100000) {
-        value = value / 100000;
-    }
-    
-    return Math.round(value * 100) / 100;
-}
+    return Math.round(n * 100) / 100;
+}   
